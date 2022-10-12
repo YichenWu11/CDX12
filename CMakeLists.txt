@@ -9,6 +9,9 @@ set(CMAKE_EXPORT_COMPILECOMMANDS ON)
 add_library(${PROJECT_NAME} 
     src/core/VarSizeAllocMngr.cpp
     src/core/DXUtil.cpp
+    src/core/Device.cpp
+    src/core/GeneralDesc.cpp
+    src/core/DescriptorHeapMngr.cpp
     src/core/DescriptorHeap/DescriptorHeapAllocation.cpp
     src/core/DescriptorHeap/IDescriptorAllocator.cpp
     src/core/DescriptorHeap/DescriptorHeapAllocationMngr.cpp
