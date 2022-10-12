@@ -4,8 +4,7 @@
 
 namespace Chen::CDX12 {
     class DescriptorHeapAllocation;
-    class DescriptorHeapAllocMngr;
-
+    class DescriptorHeapAllocationMngr;
     class IDescriptorAllocator {
     public:
         // Allocate Count descriptors

@@ -1,5 +1,5 @@
 #include "CDX12/DescripitorHeap/IDescriptorAllocator.h"
-#include <CDX12/DescripitorHeap/DescriptorAllocation.h>
+#include <CDX12/DescripitorHeap/DescriptorHeapAllocation.h>
 #include <memory>
 
 using namespace Chen::CDX12;

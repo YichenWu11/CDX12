@@ -13,6 +13,8 @@
 
 #include <DirectXMath.h>
 
+using namespace Microsoft::WRL;
+
 namespace Chen::CDX12 {
     inline std::wstring AnsiToWString(const std::string& str)
     {
@@ -20,6 +22,16 @@ namespace Chen::CDX12 {
         MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, buffer, 512);
         return std::wstring(buffer);
     }
+
+    template<typename T>
+    struct ComPtrHolder {
+        ComPtr<T> raw;
+        ComPtrHolder(ComPtr<T> ptr = {}) : raw{ ptr } {}
+        T* operator->() noexcept { return raw.Get(); }
+        const T* operator->() const noexcept { return raw.Get(); }
+        bool IsNull() const noexcept { return raw.Get() == nullptr; }
+        T* Get() const noexcept { return raw.Get(); }
+    };
 
     /*
     #if defined(_DEBUG)

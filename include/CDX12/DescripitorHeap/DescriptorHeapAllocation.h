@@ -90,6 +90,8 @@ namespace Chen::CDX12 {
 
         bool IsNull() const { return m_FirstCpuHandle.ptr == 0; }
         bool IsShaderVisible() const { return m_FirstGpuHandle.ptr != 0; }
+        // bool 
+
         size_t GetAllocationManagerId() { return m_AllocationManagerId; }
         UINT GetDescriptorSize() const { return m_DescriptorSize; }
 

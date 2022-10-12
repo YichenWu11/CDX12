@@ -1,13 +1,12 @@
 #pragma once
 
-#include "CDX12/DescripitorHeap/DescriptorAllocatonMngr.h"
+#include "DescriptorHeapAllocation.h"
 #include "IDescriptorAllocator.h"
 #include "../VarSizeAllocMngr.h"
 
 #include <d3d12.h>
+#include <atlbase.h>
 #include <mutex>
-
-using namespace Chen::CDX12;
 
 namespace Chen::CDX12 {
     /*
@@ -19,7 +18,7 @@ namespace Chen::CDX12 {
         // Creates a new D3D12 descriptor heap
         DescriptorHeapAllocationMngr(
             ID3D12Device*                     pDevice,
-            IDescriptorAllocator*             pParentAllocator,
+            IDescriptorAllocator&             pParentAllocator,
             size_t                            ThisManagerId,
             const D3D12_DESCRIPTOR_HEAP_DESC& HeapDesc
         );
@@ -28,7 +27,7 @@ namespace Chen::CDX12 {
         // that starts at offset FirstDescriptor and uses NumDescriptors descriptors
         DescriptorHeapAllocationMngr(
             ID3D12Device*         pDevice,
-            IDescriptorAllocator* pParentAllocator,
+            IDescriptorAllocator& ParentAllocator,
             size_t                ThisManagerId,
             ID3D12DescriptorHeap* pd3d12Descriptor,
             uint32_t              FirstDescriptor,
@@ -55,7 +54,36 @@ namespace Chen::CDX12 {
         // Releases all stale allocation
         void ReleaseStaleAllocations(uint64_t NumCompletedFrames);
 
+        size_t GetNumAvailableDescriptors() const { return m_FreeBlockManager.GetFreeSize(); }
+	    uint32_t GetMaxDescriptors() const { return m_NumDescriptorsInAllocation; }
     private:
+        std::mutex m_AllocationMutex;
+        ID3D12Device* m_pDevice = nullptr;
+        IDescriptorAllocator& m_ParentAllocator;
         
+        // External ID assigned to this descriptor allocations manager
+        size_t m_ThisManagerId = static_cast<size_t>(-1);
+
+        // Heap description
+        D3D12_DESCRIPTOR_HEAP_DESC m_HeapDesc;
+
+        UINT m_DescriptorSize = 0;
+
+        // Number of descriptors in the allocation. 
+        // If this manager was initialized as a subrange in the existing heap,
+        // this value may be different from m_HeapDesc.NumDescriptors
+        uint32_t m_NumDescriptorsInAllocation = 0;
+
+        // First CPU descriptor handle in the available descriptor range
+        D3D12_CPU_DESCRIPTOR_HANDLE m_FirstCPUHandle = {0};
+        
+        // First GPU descriptor handle in the available descriptor range
+        D3D12_GPU_DESCRIPTOR_HANDLE m_FirstGPUHandle = {0};
+
+        // Allocations manager used to handle descriptor allocations within the heap
+        VarSizeGPUAllocMngr m_FreeBlockManager;
+
+        // Strong reference to D3D12 descriptor heap object
+        CComPtr<ID3D12DescriptorHeap> m_pd3d12DescriptorHeap;
     };
 }
