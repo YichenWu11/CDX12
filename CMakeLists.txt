@@ -12,6 +12,12 @@ add_library(${PROJECT_NAME}
     src/core/Device.cpp
     src/core/GeneralDesc.cpp
     src/core/DescriptorHeapMngr.cpp
+    src/core/CmdQueue.cpp
+    src/core/CmdListHandle.cpp
+    src/core/GCmdList.cpp
+
+    src/core/Common/GameTimer.cpp
+
     src/core/DescriptorHeap/DescriptorHeapAllocation.cpp
     src/core/DescriptorHeap/IDescriptorAllocator.cpp
     src/core/DescriptorHeap/DescriptorHeapAllocationMngr.cpp
@@ -19,9 +25,11 @@ add_library(${PROJECT_NAME}
     src/core/DescriptorHeap/GPUDescriptorHeap.cpp
     src/core/DescriptorHeap/DynamicSuballocMngr.cpp
     src/core/DescriptorHeap/DescriptorHeapWrapper.cpp
+
     src/core/Math/Quaternion.cpp
     src/core/Math/MathHelper.cpp
 )
+
 add_library(Chen::CDX12 ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}

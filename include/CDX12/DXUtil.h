@@ -94,7 +94,6 @@ namespace Chen::CDX12 {
             UINT64 byteSize,
             Microsoft::WRL::ComPtr<ID3D12Resource>& uploadBuffer);
 
-        // 可以把 ID3DBlob 理解成一块单纯的内存区域，类似 std::span
         static Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
             const std::wstring& filename,
             const D3D_SHADER_MACRO* defines,
