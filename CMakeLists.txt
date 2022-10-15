@@ -16,6 +16,8 @@ add_library(${PROJECT_NAME}
     src/core/CmdListHandle.cpp
     src/core/GCmdList.cpp
     src/core/UploadBuffer.cpp
+    src/core/FrameResource.cpp
+    src/core/FrameResourceMngr.cpp
 
     src/core/Common/GameTimer.cpp
     src/core/Common/DX12App.cpp

@@ -12,7 +12,11 @@
 #include <DirectXMath.h>
 #include <cassert>
 #include <string>
+#include <string_view>
 #include <vector>
+#include <map>
+#include <any>
+#include <memory>
 #include <unordered_map>
 #include <algorithm>
 
