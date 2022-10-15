@@ -8,7 +8,7 @@
 
 namespace Chen::CDX12 {
 	// CPU descriptor heap is intended to provide storage for resource view descriptor handles.
-    // It contains a pool of DescriptorHeapAllocationManager object instances, where every instance manages
+    // It contains a pool of DescriptorHeapAllocationMngr object instances, where every instance manages
     // its own CPU-only D3D12 descriptor heap:
     //
     //           m_HeapPool[0]                m_HeapPool[1]                 m_HeapPool[2]

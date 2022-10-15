@@ -4,7 +4,7 @@ using namespace Chen::CDX12;
 
 DescriptorHeapAllocationMngr::DescriptorHeapAllocationMngr(DescriptorHeapAllocationMngr&& rhs) :
     m_pDevice                   { rhs.m_pDevice },
-    m_ParentAllocator          { rhs.m_ParentAllocator },
+    m_ParentAllocator           { rhs.m_ParentAllocator },
     m_ThisManagerId             { rhs.m_ThisManagerId },
     m_HeapDesc                  { rhs.m_HeapDesc },
     m_DescriptorSize            { rhs.m_DescriptorSize },
@@ -87,6 +87,7 @@ DescriptorHeapAllocation DescriptorHeapAllocationMngr::Allocate(uint32_t Count)
  
     // Use variable-size GPU allocations manager to allocate the requested number of descriptors
     auto DescriptorHandleOffset = m_FreeBlockManager.Allocate(Count);
+    // allocation failed.
     if (DescriptorHandleOffset == VarSizeGPUAllocMngr::InvalidOffset)
         return DescriptorHeapAllocation();
  
@@ -119,7 +120,9 @@ void DescriptorHeapAllocationMngr::Free(DescriptorHeapAllocation&& Allocation)
     uint64_t curr_frame_num = 0;
     m_FreeBlockManager.Free(DescriptorOffset, Allocation.GetNumHandles(), curr_frame_num);
     // m_FreeBlockManager.Free(DescriptorOffset, Allocation.GetNumHandles(), m_pDeviceD3D12Impl->GetCurrentFrame());
+    
     // Clear the allocation
+    Allocation.Reset();
     Allocation = DescriptorHeapAllocation();
 }
 

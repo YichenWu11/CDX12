@@ -6,12 +6,15 @@
 #include <d3dcompiler.h>
 #include <string_view>
 #include <wrl.h>
-
-#include <string>
-
-#include <cassert>
-
+#include <DirectXPackedVector.h>
+#include <DirectXColors.h>
+#include <DirectXCollision.h>
 #include <DirectXMath.h>
+#include <cassert>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
 
 using namespace Microsoft::WRL;
 

@@ -52,9 +52,11 @@ namespace Chen::CDX12 {
         void Free(DescriptorHeapAllocation&& Allocation); 
 
         // Releases all stale allocation
+        // called at the end of one frame (may be)
         void ReleaseStaleAllocations(uint64_t NumCompletedFrames);
 
         size_t GetNumAvailableDescriptors() const { return m_FreeBlockManager.GetFreeSize(); }
+        
 	    uint32_t GetMaxDescriptors() const { return m_NumDescriptorsInAllocation; }
     private:
         std::mutex m_AllocationMutex;
@@ -69,7 +71,7 @@ namespace Chen::CDX12 {
 
         UINT m_DescriptorSize = 0;
 
-        // Number of descriptors in the allocation. 
+        // Number of descriptors in the all allocation. 
         // If this manager was initialized as a subrange in the existing heap,
         // this value may be different from m_HeapDesc.NumDescriptors
         uint32_t m_NumDescriptorsInAllocation = 0;

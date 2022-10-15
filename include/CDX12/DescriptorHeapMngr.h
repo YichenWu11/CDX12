@@ -14,7 +14,7 @@
 namespace Chen::CDX12 {
     class DescriptorHeapMngr {
 	public:
-		static DescriptorHeapMngr& Instance() noexcept {
+		static DescriptorHeapMngr& GetInstance() noexcept {
 			static DescriptorHeapMngr instance;
 			return instance;
 		}

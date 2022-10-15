@@ -15,8 +15,12 @@ add_library(${PROJECT_NAME}
     src/core/CmdQueue.cpp
     src/core/CmdListHandle.cpp
     src/core/GCmdList.cpp
+    src/core/UploadBuffer.cpp
 
     src/core/Common/GameTimer.cpp
+    src/core/Common/DX12App.cpp
+    src/core/Common/Camera.cpp
+    src/core/Common/GeometryGenerator.cpp
 
     src/core/DescriptorHeap/DescriptorHeapAllocation.cpp
     src/core/DescriptorHeap/IDescriptorAllocator.cpp
