@@ -7,7 +7,7 @@ FrameResourceMngr::FrameResourceMngr(size_t numFrame, ID3D12Device* device) {
 	ThrowIfFailed(device->CreateFence(cpuFence, D3D12_FENCE_FLAG_NONE,
 		IID_PPV_ARGS(&gpuFence)));
 	for (size_t i = 0; i < numFrame; i++)
-		frameResources.push_back(std::make_unique<FrameResource>(cpuFence, gpuFence.Get()));
+        frameResources.push_back(std::make_unique<FrameResource>(cpuFence, gpuFence.Get(), device));
 	eventHandle = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
 }
 

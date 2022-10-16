@@ -100,6 +100,9 @@ namespace Chen::CDX12 {
         Microsoft::WRL::ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
         Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
 
+//        Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
+//        UINT64 mCurrentFence = 0;
+
         // DescriptorHeapMngr::GetInstance();  // this is the DescriptorHeap Manager For the App; 
 
         DescriptorHeapWrapper rtvCPUHeap;

@@ -11,7 +11,11 @@ namespace Chen::CDX12 {
     {
     public:
     public:
-        FrameResource(UINT64 cpuFence, ID3D12Fence* gpuFence) : cpuFence{ cpuFence }, gpuFence{ gpuFence } {}
+        FrameResource(UINT64 cpuFence, ID3D12Fence* gpuFence, ID3D12Device* device) : cpuFence{ cpuFence }, gpuFence{ gpuFence } {
+          ThrowIfFailed(device->CreateCommandAllocator(
+              D3D12_COMMAND_LIST_TYPE_DIRECT,
+              IID_PPV_ARGS(CmdListAlloc.GetAddressOf())));
+        }
 
         bool HaveResource(std::string_view name) const { return resourceMap.find(name) != resourceMap.end(); }
 

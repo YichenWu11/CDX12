@@ -126,7 +126,7 @@ void DX12App::OnResize()
 	mFrameResourceMngr->EndFrame(mCmdQueue.Get());
 	mFrameResourceMngr->BeginFrame();
 
-	// reset ÃüÁîÁÐ±í
+	// reset ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
 	ThrowIfFailed(mCmdList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
 	// Release the previous resources we will be recreating.
@@ -173,7 +173,7 @@ void DX12App::OnResize()
 	// Create descriptor to mip level 0 of entire resource using the format of the resource.
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc
 		= Desc::DSV::Basic(mDepthStencilFormat);
-	// ÀûÓÃ´Ë×ÊÔ´µÄ¸ñÊ½£¬ÎªÕû¸ö×ÊÔ´µÄµÚ0mip²ã´´½¨ÃèÊö·û
+	// ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½Ô´ï¿½Ä¸ï¿½Ê½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Äµï¿½0mipï¿½ã´´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	mDevice->CreateDepthStencilView(mDepthStencilBuffer.Get(), &dsvDesc, DepthStencilView());
 
 	// Transition the resource from its initial state to be used as a depth buffer.
@@ -373,7 +373,7 @@ bool DX12App::InitMainWindow()
 bool DX12App::InitDirect3D()
 {
 #if defined(DEBUG) || defined(_DEBUG) 
-	// Enable the D3D12 debug layer. (ÆôÓÃD3D12µÄµ÷ÊÔ²ã)
+	// Enable the D3D12 debug layer. (ï¿½ï¿½ï¿½ï¿½D3D12ï¿½Äµï¿½ï¿½Ô²ï¿½)
 	{
 		ComPtr<ID3D12Debug> debugController;
 		ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
@@ -396,9 +396,8 @@ bool DX12App::InitDirect3D()
 		ThrowIfFailed(mDevice.Create(pWarpAdapter.Get(), D3D_FEATURE_LEVEL_11_0));
 	}
 
-	// fence ÔÚ FrameResourceMngr ÄÚ´´½¨
-	//ThrowIfFailed(mDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
-	//	IID_PPV_ARGS(&mFence)));
+//	ThrowIfFailed(mDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
+//		IID_PPV_ARGS(&mFence)));
 
 	// Check 4X MSAA quality support for our back buffer format.
 	// All Direct3D 11 capable devices support 4X MSAA for all render 
@@ -421,16 +420,16 @@ bool DX12App::InitDirect3D()
 	LogAdapters();
 #endif
 
-	CreateCommandObjects();             // ´´½¨ÃüÁî¶ÓÁÐ£¨GPU£©£¬ÃüÁîÁÐ±íºÍÃüÁî·ÖÅäÆ÷£¨CPU£©
-	CreateSwapChain();					// ´´½¨½»»»Á´
-	CreateRtvAndDsvDescriptorHeaps();   // ´´½¨ Rtv ºÍ Dsv ÃèÊö·û¶Ñ
+	CreateCommandObjects();             // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½GPUï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½CPUï¿½ï¿½
+	CreateSwapChain();					// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	CreateRtvAndDsvDescriptorHeaps();   // ï¿½ï¿½ï¿½ï¿½ Rtv ï¿½ï¿½ Dsv ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	return true;
 }
 
 void DX12App::CreateCommandObjects()
 {
-	// ´´½¨ÃüÁî¶ÓÁÐ£¨GPU£©
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½GPUï¿½ï¿½
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -439,17 +438,17 @@ void DX12App::CreateCommandObjects()
 		IID_PPV_ARGS(mCmdQueue.raw.GetAddressOf())
 	));
 
-	// ´´½¨ÃüÁî·ÖÅäÆ÷
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	ThrowIfFailed(mDevice->CreateCommandAllocator(
-		D3D12_COMMAND_LIST_TYPE_DIRECT,  // direct ---> ´æ´¢Ò»ÏµÁÐ¿É¹© GPU Ö±½ÓÖ´ÐÐµÄÃüÁî
+		D3D12_COMMAND_LIST_TYPE_DIRECT,  // direct ---> ï¿½æ´¢Ò»Ïµï¿½Ð¿É¹ï¿½ GPU Ö±ï¿½ï¿½Ö´ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½
 		IID_PPV_ARGS(mDirectCmdListAlloc.GetAddressOf())));
 
-	// ´´½¨ÃüÁîÁÐ±í
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
 	ThrowIfFailed(mDevice->CreateCommandList(
 		0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		mDirectCmdListAlloc.Get(), // Associated command allocator£¨¹ØÁªÃüÁî·ÖÅäÆ÷£©
-		nullptr,                   // Initial PipelineStateObject £¨³õÊ¼»¯Á÷Ë®Ïß×´Ì¬¶ÔÏó£©ÎÞ»æÖÆ¶ÔÏó
+		mDirectCmdListAlloc.Get(), // Associated command allocatorï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		nullptr,                   // Initial PipelineStateObject ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ë®ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½Þ»ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½
 		IID_PPV_ARGS(mCmdList.raw.GetAddressOf())));
 
 	// Start off in a closed state.  This is because the first time we refer 
@@ -460,7 +459,7 @@ void DX12App::CreateCommandObjects()
 
 void DX12App::CreateSwapChain()
 {
-	// ÊÍ·ÅÖ®Ç°Ëù´´½¨µÄ½»»»Á´£¬ËæºóÔÚ½øÐÐÖØ½¨
+	// ï¿½Í·ï¿½Ö®Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½ï¿½Ø½ï¿½
 	mSwapChain.Reset();
 
 	DXGI_SWAP_CHAIN_DESC sd;
