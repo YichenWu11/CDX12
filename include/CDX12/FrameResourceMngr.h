@@ -11,6 +11,7 @@ namespace Chen::CDX12 {
 		FrameResource* GetCurrentFrameResource() noexcept;
 		const std::vector<std::unique_ptr<FrameResource>>& GetFrameResources() const noexcept { return frameResources; }
 		size_t GetCurrentCpuFence() const noexcept { return cpuFence; };
+		size_t GetCurrentIndex() const noexcept { return (cpuFence % frameResources.size()); }
 
 		void BeginFrame();
 		void EndFrame(ID3D12CommandQueue*);

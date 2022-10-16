@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Chen::CDX12::Common {
+namespace Chen::CDX12 {
     class GameTimer
     {
     public:

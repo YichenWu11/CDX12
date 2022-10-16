@@ -44,3 +44,12 @@ ComPtr<ID3D12RootSignature> Device::CreateRootSignature(const D3D12_ROOT_SIGNATU
     ThrowIfFailed(raw->CreateRootSignature(0, pSigBlob->GetBufferPointer(), pSigBlob->GetBufferSize(), IID_PPV_ARGS(&pRootSig)));
     return pRootSig;
 }
+
+HRESULT Device::Create(IUnknown* pAdapter, D3D_FEATURE_LEVEL level) {
+	HRESULT hardwareResult = D3D12CreateDevice(
+		pAdapter,             // default adapter
+		level,
+		IID_PPV_ARGS(raw.GetAddressOf()));
+
+    return hardwareResult;
+}

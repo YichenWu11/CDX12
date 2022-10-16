@@ -1,15 +1,18 @@
 #pragma once
 
-#include "_deps/d3dx12.h"
-#include "dxcapi.h"
+#define WIN32_LEAN_AND_MEAN
 
-#include <d3dcompiler.h>
-#include <string_view>
+#include "_deps/d3dx12.h"
+#include <windows.h>
 #include <wrl.h>
+#include <dxgi1_4.h>
+#include <d3d12.h>
+#include <D3Dcompiler.h>
+#include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
-#include <DirectXMath.h>
+
 #include <cassert>
 #include <string>
 #include <string_view>

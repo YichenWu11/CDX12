@@ -1,7 +1,7 @@
 #include <CDX12/Common/GameTimer.h>
 #include <windows.h>
 
-using namespace Chen::CDX12::Common;
+using namespace Chen::CDX12;
 
 GameTimer::GameTimer()
 : mSecondsPerCount(0.0), mDeltaTime(-1.0), mBaseTime(0), 

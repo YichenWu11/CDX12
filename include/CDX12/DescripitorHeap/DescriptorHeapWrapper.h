@@ -29,6 +29,8 @@ namespace Chen::CDX12 {
             return Desc.NumDescriptors;
         }
 
+        UINT GetDescriptorSize() const noexcept { return HandleIncrementSize; }
+
         bool Empty() const noexcept { return Size() == 0; }
 
         operator ID3D12DescriptorHeap* () const noexcept { return raw.Get(); }
