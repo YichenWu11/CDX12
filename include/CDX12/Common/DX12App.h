@@ -8,7 +8,6 @@
 //#endif
 
 #include "GameTimer.h"
-#include "Camera.h"
 
 #include "../DescripitorHeap/CPUDescriptorHeap.h"
 #include "../DescripitorHeap/GPUDescriptorHeap.h"
@@ -54,16 +53,16 @@ namespace Chen::CDX12 {
 
     protected:
 
-        bool InitMainWindow();        // 常规创建一个窗口
-        bool InitDirect3D();          // 初始化 Direct3D
-        void CreateCommandObjects();  // 
-        void CreateSwapChain();       // 创建交换链
+        bool InitMainWindow();       
+        bool InitDirect3D();          
+        void CreateCommandObjects(); 
+        void CreateSwapChain();     
 
-        ID3D12Resource* CurrentBackBuffer()const;   // 获取当前 Buffer
-        D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView()const;  // 获取当前 Buffer 描述符
-        D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView()const;       // 获取 深度/模板 描述符
+        ID3D12Resource* CurrentBackBuffer()const;  
+        D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView()const;  
+        D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView()const;      
 
-        void CalculateFrameStats();  // 计算帧率相关信息 Tool Fuction
+        void CalculateFrameStats();
 
         void LogAdapters();
         void LogAdapterOutputs(IDXGIAdapter* adapter);
@@ -83,7 +82,6 @@ namespace Chen::CDX12 {
         bool      mFullscreenState = false;// fullscreen enabled
 
         GameTimer mTimer;
-        Camera mCamrea;
 
         Device mDevice;
         Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;

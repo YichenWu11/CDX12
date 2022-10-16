@@ -126,7 +126,6 @@ void DX12App::OnResize()
 	mFrameResourceMngr->EndFrame(mCmdQueue.Get());
 	mFrameResourceMngr->BeginFrame();
 
-	// reset �����б�
 	ThrowIfFailed(mCmdList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
 	// Release the previous resources we will be recreating.
@@ -173,7 +172,7 @@ void DX12App::OnResize()
 	// Create descriptor to mip level 0 of entire resource using the format of the resource.
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc
 		= Desc::DSV::Basic(mDepthStencilFormat);
-	// ���ô���Դ�ĸ�ʽ��Ϊ������Դ�ĵ�0mip�㴴��������
+
 	mDevice->CreateDepthStencilView(mDepthStencilBuffer.Get(), &dsvDesc, DepthStencilView());
 
 	// Transition the resource from its initial state to be used as a depth buffer.
@@ -373,7 +372,6 @@ bool DX12App::InitMainWindow()
 bool DX12App::InitDirect3D()
 {
 #if defined(DEBUG) || defined(_DEBUG) 
-	// Enable the D3D12 debug layer. (����D3D12�ĵ��Բ�)
 	{
 		ComPtr<ID3D12Debug> debugController;
 		ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
@@ -420,16 +418,15 @@ bool DX12App::InitDirect3D()
 	LogAdapters();
 #endif
 
-	CreateCommandObjects();             // ����������У�GPU���������б�������������CPU��
-	CreateSwapChain();					// ����������
-	CreateRtvAndDsvDescriptorHeaps();   // ���� Rtv �� Dsv ��������
+	CreateCommandObjects();            
+	CreateSwapChain();					
+	CreateRtvAndDsvDescriptorHeaps();   
 
 	return true;
 }
 
 void DX12App::CreateCommandObjects()
 {
-	// ����������У�GPU��
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -440,15 +437,15 @@ void DX12App::CreateCommandObjects()
 
 	// �������������
 	ThrowIfFailed(mDevice->CreateCommandAllocator(
-		D3D12_COMMAND_LIST_TYPE_DIRECT,  // direct ---> �洢һϵ�пɹ� GPU ֱ��ִ�е�����
+		D3D12_COMMAND_LIST_TYPE_DIRECT, 
 		IID_PPV_ARGS(mDirectCmdListAlloc.GetAddressOf())));
 
 	// ���������б�
 	ThrowIfFailed(mDevice->CreateCommandList(
 		0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		mDirectCmdListAlloc.Get(), // Associated command allocator�����������������
-		nullptr,                   // Initial PipelineStateObject ����ʼ����ˮ��״̬�����޻��ƶ���
+		mDirectCmdListAlloc.Get(),
+		nullptr,                   
 		IID_PPV_ARGS(mCmdList.raw.GetAddressOf())));
 
 	// Start off in a closed state.  This is because the first time we refer 
@@ -459,7 +456,6 @@ void DX12App::CreateCommandObjects()
 
 void DX12App::CreateSwapChain()
 {
-	// �ͷ�֮ǰ�������Ľ�����������ڽ����ؽ�
 	mSwapChain.Reset();
 
 	DXGI_SWAP_CHAIN_DESC sd;
