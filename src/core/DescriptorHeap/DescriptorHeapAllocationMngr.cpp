@@ -110,6 +110,22 @@ DescriptorHeapAllocation DescriptorHeapAllocationMngr::Allocate(uint32_t Count)
         static_cast<uint16_t>(m_ThisManagerId));
 }
 
+void DescriptorHeapAllocationMngr::FreeAllocation(DescriptorHeapAllocation&& allocation) {
+    assert(allocation.GetAllocationManagerId() == m_ThisManagerId && "Invalid descriptor heap manager Id");
+
+    if (allocation.IsNull())
+        return;
+
+    std::lock_guard<std::mutex> LockGuard(m_AllocationMutex);
+    auto DescriptorOffset = (allocation.GetCpuHandle().ptr - m_FirstCPUHandle.ptr) / m_DescriptorSize;
+    // Methods of VariableSizeAllocationsManager class are not thread safe!
+    // FIXME: 这里需要传入目前帧的编号(0)！！！
+    m_FreeBlockManager.Free(DescriptorOffset, allocation.GetNumHandles(), 0);
+
+    // Clear the allocation
+    allocation.Reset();
+}
+
 void DescriptorHeapAllocationMngr::Free(DescriptorHeapAllocation&& Allocation)
 {
     std::lock_guard<std::mutex> LockGuard(m_AllocationMutex);

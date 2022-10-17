@@ -23,6 +23,7 @@ add_library(${PROJECT_NAME}
     src/core/Common/DX12App.cpp
     src/core/Common/Camera.cpp
     src/core/Common/GeometryGenerator.cpp
+    src/core/Common/GlobalSamplers.cpp
 
     src/core/DescriptorHeap/DescriptorHeapAllocation.cpp
     src/core/DescriptorHeap/IDescriptorAllocator.cpp

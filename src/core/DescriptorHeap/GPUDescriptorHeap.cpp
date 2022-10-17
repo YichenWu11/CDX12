@@ -49,11 +49,11 @@ void GPUDescriptorHeap::Free(DescriptorHeapAllocation&& Allocation)
     if(MgrId == 0)
     {
         std::lock_guard<std::mutex> LockGuard(m_AllocMutex);
-        m_HeapAllocationManager.Free(std::move(Allocation));
+        m_HeapAllocationManager.FreeAllocation(std::move(Allocation));
     }
     else
     {
         std::lock_guard<std::mutex> LockGuard(m_DynAllocMutex);
-        m_DynamicAllocationsManager.Free(std::move(Allocation));
+        m_DynamicAllocationsManager.FreeAllocation(std::move(Allocation));
     }
 }

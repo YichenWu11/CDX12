@@ -40,6 +40,13 @@ namespace Chen::CDX12 {
     
         virtual bool Initialize();
         virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+        void SetNumCpuCSU(uint32_t num) { numCpuCSU = num; }
+        void SetNumCpuRTV(uint32_t num) { numCpuRTV = num; }
+        void SetNumCpuDSV(uint32_t num) { numCpuDSV = num; }
+        void SetNumGpuCSU_Static(uint32_t num) { numGpuCSU_static = num; }
+        void SetNumGpuCSU_Dynamic(uint32_t num) { numGpuCSU_dynamic = num; }
+
     protected:
         virtual void CreateRtvAndDsvDescriptorHeaps();
         virtual void OnResize();
@@ -71,6 +78,8 @@ namespace Chen::CDX12 {
     protected:
         static DX12App* mApp;
 
+        int gNumFrameResource = 3; // 3 frameResources
+
         HINSTANCE mhAppInst = nullptr; // application instance handle
         HWND      mhMainWnd = nullptr; // main window handle
         bool      mAppPaused = false;  // is the application paused?
@@ -96,15 +105,12 @@ namespace Chen::CDX12 {
         Microsoft::WRL::ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
         Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
 
-        // Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
-        // UINT64 mCurrentFence = 0;
-
         // DescriptorHeapMngr::GetInstance();  // this is the DescriptorHeap Manager For the App; 
 
-        DescriptorHeapWrapper rtvCPUHeap;
-        DescriptorHeapWrapper dsvCPUHeap;
-        DescriptorHeapWrapper csuCPUHeap;
-        DescriptorHeapWrapper csuGPUHeap;
+        DescriptorHeapAllocation rtvCpuDH;
+        DescriptorHeapAllocation dsvCpuDH;
+        DescriptorHeapAllocation csuCpuDH;
+        DescriptorHeapAllocation csuGpuDH;
 
         D3D12_VIEWPORT mScreenViewport;
         D3D12_RECT mScissorRect; 
@@ -117,5 +123,12 @@ namespace Chen::CDX12 {
         DXGI_FORMAT mDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         int mClientWidth = 1000;
         int mClientHeight = 800;
+
+        // Descriptor_Num
+        uint32_t numCpuCSU = 20;
+        uint32_t numCpuRTV = 2;
+        uint32_t numCpuDSV = 1;
+        uint32_t numGpuCSU_static = 10;
+        uint32_t numGpuCSU_dynamic = 5;
     };
 }

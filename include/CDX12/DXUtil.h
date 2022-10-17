@@ -19,6 +19,8 @@
 #include <vector>
 #include <map>
 #include <any>
+#include <span>
+#include <array>
 #include <memory>
 #include <unordered_map>
 #include <algorithm>

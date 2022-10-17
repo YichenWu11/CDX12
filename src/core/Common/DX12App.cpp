@@ -33,6 +33,17 @@ DX12App::~DX12App()
 {
 	if (mDevice.Get() != nullptr)
 		mFrameResourceMngr->EndFrame(mCmdQueue.Get()); // sync
+
+	DescriptorHeapMngr::GetInstance().GetRTVCpuDH()->Free(std::move(rtvCpuDH));
+	DescriptorHeapMngr::GetInstance().GetDSVCpuDH()->Free(std::move(dsvCpuDH));
+	DescriptorHeapMngr::GetInstance().GetCSUCpuDH()->Free(std::move(csuCpuDH));
+	DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Free(std::move(csuGpuDH));
+
+	for (int i = 0; i < gNumFrameResource; ++i) {
+		DescriptorHeapMngr::GetInstance().GetRTVCpuDH()->ReleaseStaleAllocations(i);
+		DescriptorHeapMngr::GetInstance().GetDSVCpuDH()->ReleaseStaleAllocations(i);
+		DescriptorHeapMngr::GetInstance().GetCSUCpuDH()->ReleaseStaleAllocations(i);
+	}
 }
 
 HINSTANCE DX12App::AppInst()const
@@ -100,20 +111,9 @@ bool DX12App::Initialize()
 
 void DX12App::CreateRtvAndDsvDescriptorHeaps()
 {
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
-	rtvHeapDesc.NumDescriptors = SwapChainBufferCount;
-	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	rtvHeapDesc.NodeMask = 0;
-	ThrowIfFailed(rtvCPUHeap.Create(mDevice.Get(), &rtvHeapDesc));
+	rtvCpuDH = DescriptorHeapMngr::GetInstance().GetRTVCpuDH()->Allocate(SwapChainBufferCount);
 
-
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
-	dsvHeapDesc.NumDescriptors = 1;
-	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	dsvHeapDesc.NodeMask = 0;
-	ThrowIfFailed(dsvCPUHeap.Create(mDevice.Get(), &dsvHeapDesc));
+	dsvCpuDH = DescriptorHeapMngr::GetInstance().GetDSVCpuDH()->Allocate(1);
 }
 
 void DX12App::OnResize()
@@ -145,7 +145,7 @@ void DX12App::OnResize()
 	for (UINT i = 0; i < SwapChainBufferCount; ++i)
 	{
 		ThrowIfFailed(mSwapChain->GetBuffer(i, IID_PPV_ARGS(&mSwapChainBuffer[i])));
-		mDevice->CreateRenderTargetView(mSwapChainBuffer[i].Get(), nullptr, rtvCPUHeap.hCPU(i));
+		mDevice->CreateRenderTargetView(mSwapChainBuffer[i].Get(), nullptr, rtvCpuDH.GetCpuHandle(i));
 	}
 
 	// Create the depth/stencil buffer and view.
@@ -394,13 +394,6 @@ bool DX12App::InitDirect3D()
 		ThrowIfFailed(mDevice.Create(pWarpAdapter.Get(), D3D_FEATURE_LEVEL_11_0));
 	}
 
-//	ThrowIfFailed(mDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
-//		IID_PPV_ARGS(&mFence)));
-
-	// Check 4X MSAA quality support for our back buffer format.
-	// All Direct3D 11 capable devices support 4X MSAA for all render 
-	// target formats, so we only need to check quality support.
-
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
 	msQualityLevels.Format = mBackBufferFormat;
 	msQualityLevels.SampleCount = 4;
@@ -410,9 +403,6 @@ bool DX12App::InitDirect3D()
 		D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS,
 		&msQualityLevels,
 		sizeof(msQualityLevels)));
-
-	//m4xMsaaQuality = msQualityLevels.NumQualityLevels;
-	//assert(m4xMsaaQuality > 0 && "Unexpected MSAA quality level.");
 
 #ifdef _DEBUG
 	LogAdapters();
@@ -487,12 +477,12 @@ ID3D12Resource* DX12App::CurrentBackBuffer() const
 
 D3D12_CPU_DESCRIPTOR_HANDLE DX12App::CurrentBackBufferView() const
 {
-	return rtvCPUHeap.hCPU(mCurrBackBuffer);
+	return rtvCpuDH.GetCpuHandle(mCurrBackBuffer);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DX12App::DepthStencilView() const
 {
-	return dsvCPUHeap.hCPU(0);
+	return dsvCpuDH.GetCpuHandle(0);
 }
 
 void DX12App::CalculateFrameStats()

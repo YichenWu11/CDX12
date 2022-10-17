@@ -135,3 +135,12 @@ void VarSizeAllocMngr::Free(OffsetType Offset, OffsetType Size)
 }
 
 VarSizeGPUAllocMngr::OffsetType VarSizeGPUAllocMngr::InvalidOffset = -1;
+
+VarSizeGPUAllocMngr::VarSizeGPUAllocMngr(OffsetType capacity) : VarSizeAllocMngr(capacity) {}
+
+VarSizeGPUAllocMngr::VarSizeGPUAllocMngr(VarSizeGPUAllocMngr&& rhs) : 
+    VarSizeAllocMngr(std::move(rhs)),
+    m_StaleAllocations(std::move(rhs.m_StaleAllocations))
+{
+    
+}

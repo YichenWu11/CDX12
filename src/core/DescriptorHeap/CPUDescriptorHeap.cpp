@@ -27,7 +27,6 @@ CPUDescriptorHeap::CPUDescriptorHeap(
 
 CPUDescriptorHeap::~CPUDescriptorHeap() {
     assert(m_CurrentSize == 0 && "Not all allocations released");
-
     assert(m_AvailableHeaps.size() == m_HeapPool.size() && "Not all descriptor heap pools are released");
 
 #ifndef NDEBUG

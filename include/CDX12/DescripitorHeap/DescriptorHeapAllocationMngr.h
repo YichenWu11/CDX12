@@ -41,7 +41,7 @@ namespace Chen::CDX12 {
         DescriptorHeapAllocationMngr(const DescriptorHeapAllocationMngr&) = delete;
         DescriptorHeapAllocationMngr& operator=(const DescriptorHeapAllocationMngr&) = delete;
 
-        ~DescriptorHeapAllocationMngr();
+        ~DescriptorHeapAllocationMngr() = default;
 
         // Allocates Count descriptors
         DescriptorHeapAllocation Allocate(uint32_t Count);
@@ -49,7 +49,9 @@ namespace Chen::CDX12 {
         // Releases descriptor heap allocation. Note
         // that the allocation is not released immediately, but
         // added to the release queue in the allocations manager
-        void Free(DescriptorHeapAllocation&& Allocation); 
+        void Free(DescriptorHeapAllocation&& Allocation);
+
+        void FreeAllocation(DescriptorHeapAllocation&& Allocation); 
 
         // Releases all stale allocation
         // called at the end of one frame (may be)

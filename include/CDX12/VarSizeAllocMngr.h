@@ -92,7 +92,7 @@ namespace Chen::CDX12 {
     public:
         VarSizeGPUAllocMngr(OffsetType capacity);
 
-        ~VarSizeGPUAllocMngr();
+        ~VarSizeGPUAllocMngr() = default;
         
         VarSizeGPUAllocMngr(VarSizeGPUAllocMngr&& rhs);
 
