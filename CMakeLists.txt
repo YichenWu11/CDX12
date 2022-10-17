@@ -24,6 +24,7 @@ add_library(${PROJECT_NAME}
     src/core/Common/Camera.cpp
     src/core/Common/GeometryGenerator.cpp
     src/core/Common/GlobalSamplers.cpp
+    src/core/Common/DDSTextureLoader.cpp
 
     src/core/DescriptorHeap/DescriptorHeapAllocation.cpp
     src/core/DescriptorHeap/IDescriptorAllocator.cpp
