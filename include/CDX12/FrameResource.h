@@ -29,7 +29,8 @@ namespace Chen::CDX12 {
         template<typename T>
         const T& GetResource(std::string_view name) const;
 
-        CmdListHandle Command();
+        ID3D12CommandAllocator* GetAllocator() { return CmdListAlloc.Get(); }
+
     private:
         friend class FrameResourceMngr;
 
@@ -43,12 +44,9 @@ namespace Chen::CDX12 {
         void BeginFrame(HANDLE sharedEventHandle);
 
         Microsoft::WRL::ComPtr<ID3D12CommandAllocator> CmdListAlloc;
-        GCmdList CmdList; // CComPtr
 
-        //std::unique_ptr<UploadBuffer<PassConstants>> PassCB = nullptr;
-
-        ID3D12Fence* gpuFence;
         UINT64 cpuFence;
+        ID3D12Fence* gpuFence;
         std::map<std::string, std::any, std::less<>> resourceMap;
     };
 }

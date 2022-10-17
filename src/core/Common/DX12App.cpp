@@ -318,8 +318,8 @@ LRESULT DX12App::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		if (wParam == VK_ESCAPE)
 		{
-			PostQuitMessage(0);
-			exit(0);
+            PostQuitMessage(0);
+			// exit(0);
 		}
 		else if ((int)wParam == VK_SPACE)
 			mAppPaused = !mAppPaused;
@@ -435,12 +435,10 @@ void DX12App::CreateCommandObjects()
 		IID_PPV_ARGS(mCmdQueue.raw.GetAddressOf())
 	));
 
-	// �������������
 	ThrowIfFailed(mDevice->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT, 
 		IID_PPV_ARGS(mDirectCmdListAlloc.GetAddressOf())));
 
-	// ���������б�
 	ThrowIfFailed(mDevice->CreateCommandList(
 		0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
@@ -489,7 +487,7 @@ ID3D12Resource* DX12App::CurrentBackBuffer() const
 
 D3D12_CPU_DESCRIPTOR_HANDLE DX12App::CurrentBackBufferView() const
 {
-	return rtvCPUHeap.hCPU(mFrameResourceMngr->GetCurrentIndex());
+	return rtvCPUHeap.hCPU(mCurrBackBuffer);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DX12App::DepthStencilView() const

@@ -71,8 +71,6 @@ namespace Chen::CDX12 {
     protected:
         static DX12App* mApp;
 
-        int gNumFrameResource = 3; // 3 frameResources
-
         HINSTANCE mhAppInst = nullptr; // application instance handle
         HWND      mhMainWnd = nullptr; // main window handle
         bool      mAppPaused = false;  // is the application paused?
@@ -98,8 +96,8 @@ namespace Chen::CDX12 {
         Microsoft::WRL::ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
         Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
 
-//        Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
-//        UINT64 mCurrentFence = 0;
+        // Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
+        // UINT64 mCurrentFence = 0;
 
         // DescriptorHeapMngr::GetInstance();  // this is the DescriptorHeap Manager For the App; 
 

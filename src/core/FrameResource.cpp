@@ -2,11 +2,6 @@
 
 using namespace Chen::CDX12;
 
-CmdListHandle FrameResource::Command()
-{
-    return { CmdListAlloc.Get(), CmdList.Get() };
-}
-
 void FrameResource::Signal(ID3D12CommandQueue* cmdQueue, UINT64 cpuFence) {
     this->cpuFence = cpuFence;
     cmdQueue->Signal(gpuFence, cpuFence);
