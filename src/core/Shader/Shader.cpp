@@ -97,7 +97,7 @@ Shader::Shader(
 bool Shader::SetResource(
 	std::string_view propertyName,
 	ID3D12GraphicsCommandList* cmdList,
-	ID3D12Resource* resource) const 
+	D3D12_GPU_VIRTUAL_ADDRESS address) const 
 {
 	auto var = GetProperty(propertyName);
 	if (!var) return false;
@@ -105,17 +105,17 @@ bool Shader::SetResource(
 		case ShaderVariableType::ConstantBuffer: {
 			cmdList->SetGraphicsRootConstantBufferView(
 				var->rootSigPos,
-				resource->GetGPUVirtualAddress());
+				address);
 		} break;
 		case ShaderVariableType::StructuredBuffer: {
 			cmdList->SetGraphicsRootShaderResourceView(
 				var->rootSigPos,
-				resource->GetGPUVirtualAddress());
+				address);
 		} break;
 		case ShaderVariableType::RWStructuredBuffer: {
 			cmdList->SetGraphicsRootUnorderedAccessView(
 				var->rootSigPos,
-				resource->GetGPUVirtualAddress());
+				address);
 		} break;
 		default:
 			return false;

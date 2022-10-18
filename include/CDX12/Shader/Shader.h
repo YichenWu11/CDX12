@@ -11,10 +11,19 @@ namespace Chen::CDX12 {
     class Shader {
     public:
         struct Property {
-		ShaderVariableType type;
-		uint32_t spaceIndex;
-		uint32_t registerIndex;
-		uint32_t arrSize;
+            ShaderVariableType type;
+            uint32_t spaceIndex;
+            uint32_t registerIndex;
+            uint32_t arrSize;
+            Property(
+                ShaderVariableType type,
+                uint32_t spaceIndex,
+                uint32_t registerIndex,
+                uint32_t arrSize) : 
+                type(type), 
+                spaceIndex(spaceIndex), 
+                registerIndex(registerIndex), 
+                arrSize(arrSize) {}
 	    };
     protected:
         struct InsideProperty : public Property {
@@ -42,7 +51,7 @@ namespace Chen::CDX12 {
         bool SetResource(
             std::string_view propertyName,
             ID3D12GraphicsCommandList* cmdList,
-            ID3D12Resource* resource) const;
+            D3D12_GPU_VIRTUAL_ADDRESS address) const;
 
         bool SetResource(
             std::string_view propertyName,
