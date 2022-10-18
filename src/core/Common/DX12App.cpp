@@ -409,7 +409,19 @@ bool DX12App::InitDirect3D()
 #endif
 
 	CreateCommandObjects();            
-	CreateSwapChain();					
+	CreateSwapChain();		
+
+	DescriptorHeapMngr::GetInstance().Init(
+		mDevice.Get(),
+		numCpuCSU,
+		numCpuRTV,
+		numCpuDSV,
+		numGpuCSU_static,
+		numGpuCSU_dynamic
+	);
+
+	mFrameResourceMngr = std::make_unique<FrameResourceMngr>(gNumFrameResource, mDevice.Get());
+
 	CreateRtvAndDsvDescriptorHeaps();   
 
 	return true;
