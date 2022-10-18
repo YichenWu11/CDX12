@@ -1,5 +1,7 @@
 #pragma once
 
+#define UNICODE
+
 // FIXME: Error --> "No Target Architecture"
 //#include <winnt.h>
 //#if defined(DEBUG) || defined(_DEBUG)
@@ -100,7 +102,7 @@ namespace Chen::CDX12 {
 
         std::unique_ptr<FrameResourceMngr> mFrameResourceMngr;
 
-        static const int SwapChainBufferCount = 3;
+        static const int SwapChainBufferCount = 2;
         int mCurrBackBuffer = 0;
         Microsoft::WRL::ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
         Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
@@ -125,7 +127,7 @@ namespace Chen::CDX12 {
         int mClientHeight = 800;
 
         // Descriptor_Num
-        uint32_t numCpuRTV = 3;
+        uint32_t numCpuRTV = 2;
         uint32_t numCpuDSV = 1;
         uint32_t numCpuCSU = 168;
         uint32_t numGpuCSU_static = 168;

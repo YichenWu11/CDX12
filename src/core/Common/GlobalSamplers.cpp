@@ -1,5 +1,7 @@
 #include <CDX12/Common/GlobalSamplers.h>
 
+using namespace Chen::CDX12;
+
 struct GlobalSampleData {
 	std::array<D3D12_STATIC_SAMPLER_DESC, 7> arr;
 

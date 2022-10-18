@@ -26,6 +26,9 @@ add_library(${PROJECT_NAME}
     src/core/Common/GlobalSamplers.cpp
     src/core/Common/DDSTextureLoader.cpp
 
+    src/core/Shader/Shader.cpp
+    src/core/Shader/BasicShader.cpp
+
     src/core/DescriptorHeap/DescriptorHeapAllocation.cpp
     src/core/DescriptorHeap/IDescriptorAllocator.cpp
     src/core/DescriptorHeap/DescriptorHeapAllocationMngr.cpp
