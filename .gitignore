@@ -3,3 +3,4 @@ build
 .vscode
 include/CDX12/_deps
 src/core/_deps
+.VSCodeCounter
