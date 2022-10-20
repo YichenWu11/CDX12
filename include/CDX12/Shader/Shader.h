@@ -2,7 +2,7 @@
 
 #include "ShaderVariableType.h"
 #include <optional>
-#include <CDX12/Common/GlobalSamplers.h>
+#include <CDX12/Shader/GlobalSamplers.h>
 #include <CDX12/DescripitorHeap/DescriptorHeapAllocation.h>
 
 using Microsoft::WRL::ComPtr;

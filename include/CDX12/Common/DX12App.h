@@ -128,9 +128,9 @@ namespace Chen::CDX12 {
         int mClientWidth = 1000;
         int mClientHeight = 800;
 
-        // Descriptor_Num
-        uint32_t numCpuRTV = 2;
-        uint32_t numCpuDSV = 1;
+        // Initial Total Descriptor_Num
+        uint32_t numCpuRTV = 10;
+        uint32_t numCpuDSV = 10;
         uint32_t numCpuCSU = 168;
         uint32_t numGpuCSU_static = 168;
         uint32_t numGpuCSU_dynamic = 168;

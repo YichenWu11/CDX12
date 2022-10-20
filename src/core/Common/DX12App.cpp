@@ -313,7 +313,6 @@ LRESULT DX12App::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if (wParam == VK_ESCAPE)
 		{
             PostQuitMessage(0);
-			// exit(0);
 		}
 		else if ((int)wParam == VK_SPACE)
 			mAppPaused = !mAppPaused;

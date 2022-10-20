@@ -6,8 +6,8 @@
 
 namespace Chen::CDX12::Math {
 
-class MathHelper
-{
+    class MathHelper
+    {
     public:
         // Returns random float in [0, 1).
         static float RandF()

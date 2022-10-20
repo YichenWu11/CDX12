@@ -138,17 +138,6 @@ namespace Chen::CDX12 {
     };
 
     #define MaxLights 16
-
-    struct Texture
-    {
-        // Unique material name for lookup.
-        std::string Name;
-
-        std::wstring Filename;
-
-        Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
-        Microsoft::WRL::ComPtr<ID3D12Resource> UploadHeap = nullptr;
-    };
 }
 
 #ifndef ThrowIfFailed

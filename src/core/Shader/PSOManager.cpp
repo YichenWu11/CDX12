@@ -21,7 +21,7 @@ PSOManager::PSOManager(
     ThrowIfFailed(device->CreateGraphicsPipelineState(&basePsoDesc, IID_PPV_ARGS(&mPSOs["base"])));
 
     //
-    // PSO for Transparent
+    // PSO for Transparent (classic)
     //
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC transparentPsoDesc = basePsoDesc;

@@ -1,4 +1,4 @@
-#include <CDX12/Common/GlobalSamplers.h>
+#include <CDX12/Shader/GlobalSamplers.h>
 
 using namespace Chen::CDX12;
 

@@ -23,12 +23,16 @@ add_library(${PROJECT_NAME}
     src/core/Common/DX12App.cpp
     src/core/Common/Camera.cpp
     src/core/Common/GeometryGenerator.cpp
-    src/core/Common/GlobalSamplers.cpp
     src/core/Common/DDSTextureLoader.cpp
-
+    
+    src/core/Shader/GlobalSamplers.cpp
     src/core/Shader/Shader.cpp
     src/core/Shader/BasicShader.cpp
     src/core/Shader/PSOManager.cpp
+
+    src/core/Material/Texture.cpp
+    src/core/Material/MaterialMngr.cpp
+    src/core/Material/TextureMngr.cpp
 
     src/core/DescriptorHeap/DescriptorHeapAllocation.cpp
     src/core/DescriptorHeap/IDescriptorAllocator.cpp
