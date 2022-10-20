@@ -119,11 +119,11 @@ void DescriptorHeapAllocationMngr::FreeAllocation(DescriptorHeapAllocation&& all
     std::lock_guard<std::mutex> LockGuard(m_AllocationMutex);
     auto DescriptorOffset = (allocation.GetCpuHandle().ptr - m_FirstCPUHandle.ptr) / m_DescriptorSize;
     // Methods of VariableSizeAllocationsManager class are not thread safe!
-    // FIXME: 这里需要传入目前帧的编号(0)！！！
-    m_FreeBlockManager.Free(DescriptorOffset, allocation.GetNumHandles(), 0);
+    m_FreeBlockManager.Free(DescriptorOffset, allocation.GetNumHandles());
 
     // Clear the allocation
     allocation.Reset();
+    allocation = DescriptorHeapAllocation();
 }
 
 void DescriptorHeapAllocationMngr::Free(DescriptorHeapAllocation&& Allocation)
@@ -131,20 +131,10 @@ void DescriptorHeapAllocationMngr::Free(DescriptorHeapAllocation&& Allocation)
     std::lock_guard<std::mutex> LockGuard(m_AllocationMutex);
     auto DescriptorOffset = (Allocation.GetCpuHandle().ptr - m_FirstCPUHandle.ptr) / m_DescriptorSize;
     // Note that the allocation is not released immediately, but added to the release queue in the allocations manager
-
-    // FIXME: 这里需要传入目前帧的编号！！！
-    uint64_t curr_frame_num = 0;
-    m_FreeBlockManager.Free(DescriptorOffset, Allocation.GetNumHandles(), curr_frame_num);
+    m_FreeBlockManager.Free(DescriptorOffset, Allocation.GetNumHandles());
     // m_FreeBlockManager.Free(DescriptorOffset, Allocation.GetNumHandles(), m_pDeviceD3D12Impl->GetCurrentFrame());
     
     // Clear the allocation
     Allocation.Reset();
     Allocation = DescriptorHeapAllocation();
-}
-
-// 传入目前帧的编号
-void DescriptorHeapAllocationMngr::ReleaseStaleAllocations(uint64_t NumCompletedFrames)
-{
-    std::lock_guard<std::mutex> LockGuard(m_AllocationMutex);
-    m_FreeBlockManager.ReleaseCompletedFrames(NumCompletedFrames);
 }

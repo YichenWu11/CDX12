@@ -41,7 +41,7 @@ namespace Chen::CDX12 {
 
         virtual DescriptorHeapAllocation Allocate(uint32_t Count) override final;
         virtual void Free(DescriptorHeapAllocation&& Allocation) override final;
-        void ReleaseStaleAllocations(uint64_t NumCompletedFrames);
+
         virtual uint32_t GetDescriptorSize() const noexcept override final { return m_DescriptorSize; }
 
     private:

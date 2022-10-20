@@ -53,10 +53,6 @@ namespace Chen::CDX12 {
 
         void FreeAllocation(DescriptorHeapAllocation&& Allocation); 
 
-        // Releases all stale allocation
-        // called at the end of one frame (may be)
-        void ReleaseStaleAllocations(uint64_t NumCompletedFrames);
-
         size_t GetNumAvailableDescriptors() const { return m_FreeBlockManager.GetFreeSize(); }
         
 	    uint32_t GetMaxDescriptors() const { return m_NumDescriptorsInAllocation; }
@@ -85,7 +81,7 @@ namespace Chen::CDX12 {
         D3D12_GPU_DESCRIPTOR_HANDLE m_FirstGPUHandle = {0};
 
         // Allocations manager used to handle descriptor allocations within the heap
-        VarSizeGPUAllocMngr m_FreeBlockManager;
+        VarSizeAllocMngr m_FreeBlockManager;
 
         // Strong reference to D3D12 descriptor heap object
         CComPtr<ID3D12DescriptorHeap> m_pd3d12DescriptorHeap;

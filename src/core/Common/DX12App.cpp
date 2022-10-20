@@ -38,12 +38,6 @@ DX12App::~DX12App()
 	DescriptorHeapMngr::GetInstance().GetDSVCpuDH()->Free(std::move(dsvCpuDH));
 	DescriptorHeapMngr::GetInstance().GetCSUCpuDH()->Free(std::move(csuCpuDH));
 	DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Free(std::move(csuGpuDH));
-
-	for (int i = 0; i < gNumFrameResource; ++i) {
-		DescriptorHeapMngr::GetInstance().GetRTVCpuDH()->ReleaseStaleAllocations(i);
-		DescriptorHeapMngr::GetInstance().GetDSVCpuDH()->ReleaseStaleAllocations(i);
-		DescriptorHeapMngr::GetInstance().GetCSUCpuDH()->ReleaseStaleAllocations(i);
-	}
 }
 
 HINSTANCE DX12App::AppInst()const

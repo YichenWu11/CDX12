@@ -81,15 +81,3 @@ void CPUDescriptorHeap::Free(DescriptorHeapAllocation&& Allocation)
     m_CurrentSize -= static_cast<uint32_t>(Allocation.GetNumHandles());
     m_HeapPool[ManagerId].Free(std::move(Allocation));
 }
-
-void CPUDescriptorHeap::ReleaseStaleAllocations(uint64_t NumCompletedFrames)
-{
-    std::lock_guard<std::mutex> LockGuard(m_HeapPoolMutex);
-    for (size_t HeapManagerInd = 0; HeapManagerInd < m_HeapPool.size(); ++HeapManagerInd)
-    {
-        m_HeapPool[HeapManagerInd].ReleaseStaleAllocations(NumCompletedFrames);
-        // Return the manager to the pool of available managers if it has available descriptors
-        if(m_HeapPool[HeapManagerInd].GetNumAvailableDescriptors() > 0)
-            m_AvailableHeaps.insert(HeapManagerInd);
-    }
-}
