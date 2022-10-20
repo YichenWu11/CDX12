@@ -1,4 +1,4 @@
-#include <CDX12/Common/GeometryGenerator.h>
+#include <CDX12/Geometry/GeometryGenerator.h>
 
 using namespace Chen::CDX12;
 using namespace DirectX;

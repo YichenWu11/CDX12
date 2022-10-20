@@ -6,14 +6,11 @@ using namespace Chen::CDX12;
 
 TextureMngr::TextureMngr(int size)
 {
-    textureSrvAllocation = DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Allocate(size);
-    assert(textureSrvAllocation.IsNull());
 }
 
 
 TextureMngr::~TextureMngr()
 {
-    DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Free(std::move(textureSrvAllocation));
 }
 
 // return the index of the texture

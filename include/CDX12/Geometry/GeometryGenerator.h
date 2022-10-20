@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../DXUtil.h"
 #include <cstdint>
 
@@ -93,6 +95,8 @@ namespace Chen::CDX12 {
         /// Creates a quad aligned with the screen.  This is useful for postprocessing and screen effects.
         ///</summary>
         MeshData CreateQuad(float x, float y, float w, float h, float depth);
+
+
 
     private:
         void Subdivide(MeshData& meshData);

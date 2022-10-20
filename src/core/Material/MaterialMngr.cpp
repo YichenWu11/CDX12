@@ -16,7 +16,7 @@ void MaterialMngr::CreateMaterial(
     DirectX::XMFLOAT4 DiffuseAlbedo,
     DirectX::XMFLOAT3 FresnelR0,
     float Roughness,
-    int NormalSrvHeapIndex = -1)
+    int NormalSrvHeapIndex)
 {
     auto mat = std::make_unique<BasicMaterial>();
 	mat->Name = name;

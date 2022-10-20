@@ -1,4 +1,6 @@
-#include "./DXUtil.h"
+#pragma once
+
+#include "../DXUtil.h"
 
 namespace Chen::CDX12 {
     struct SubmeshGeometry
@@ -27,14 +29,12 @@ namespace Chen::CDX12 {
         Microsoft::WRL::ComPtr<ID3D12Resource> VertexBufferUploader = nullptr;
         Microsoft::WRL::ComPtr<ID3D12Resource> IndexBufferUploader = nullptr;
 
-        // Data about the buffers.
-        UINT VertexByteStride = 0;
-        UINT VertexBufferByteSize = 0;
-        DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT;
-        UINT IndexBufferByteSize = 0;
+        UINT VertexByteStride = 0;      // per vertex data size in bytes
+        UINT VertexBufferByteSize = 0;  // vertex buffer total size in bytes
+        DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT; // DXGI_FORMAT_R16_UINT / DXGI_FORMAT_R32_UINT
+        UINT IndexBufferByteSize = 0;   // index buffer total size in bytes
 
         // 一个 MeshGeometry 结构体能够存储一组顶点/索引缓冲区中的多个几何体
-        // 利用一下容器来定义子网格几何体，我们就能单独地绘制出其中的子网格（单个几何体）
         std::unordered_map<std::string, SubmeshGeometry> DrawArgs;
 
         D3D12_VERTEX_BUFFER_VIEW VertexBufferView()const
@@ -57,10 +57,10 @@ namespace Chen::CDX12 {
             return ibv;
         }
 
-        void DisposeUploaders()
+        void DisposeUploader()
         {
             VertexBufferUploader = nullptr;
-            IndexBufferUploader = nullptr;
+            IndexBufferUploader  = nullptr;
         }
     };
 }

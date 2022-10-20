@@ -84,7 +84,7 @@ namespace Chen::CDX12 {
         }
     
         // Returns pointer to the descriptor heap that contains this allocation
-        ID3D12DescriptorHeap *GetDescriptorHeap(){return m_pDescriptorHeap;}
+        ID3D12DescriptorHeap *GetDescriptorHeap(){ return m_pDescriptorHeap;}
     
         size_t GetNumHandles()const{return m_NumHandles;}
 

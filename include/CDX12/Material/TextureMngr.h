@@ -23,10 +23,13 @@ namespace Chen::CDX12 {
             return (name2index.find(name) != name2index.end()) ? name2index.at(name) : InvalidIndex;
         }
 
+        Texture* GetTexture(const std::string& name) {
+            return (mTextures.find(name) != mTextures.end()) ? mTextures.at(name).get() : nullptr;
+        }
+
     private:
         size_t InvalidIndex = -1;
-        std::unordered_map<const std::string, size_t> name2index;
-        std::map<const std::string, std::unique_ptr<Texture>> mTextures;
-        DescriptorHeapAllocation textureSrvAllocation;
+        std::unordered_map<std::string, size_t> name2index;
+        std::map<std::string, std::unique_ptr<Texture>> mTextures;
     };
 }
