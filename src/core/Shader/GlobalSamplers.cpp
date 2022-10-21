@@ -70,10 +70,10 @@ struct GlobalSampleData {
 	}
 };
 
-struct GlobalSampleDataSsao {
+struct GlobalSampleDataSSAO {
 	std::array<D3D12_STATIC_SAMPLER_DESC, 4> arr;
 
-	GlobalSampleDataSsao()
+	GlobalSampleDataSSAO()
 	{
 		const CD3DX12_STATIC_SAMPLER_DESC pointClamp(
 			0, // shaderRegister
@@ -112,12 +112,12 @@ struct GlobalSampleDataSsao {
 };
 
 static GlobalSampleData sampleData;
-static GlobalSampleDataSsao sampleDataSsao;
+static GlobalSampleDataSSAO sampleDataSSAO;
 
 std::span<D3D12_STATIC_SAMPLER_DESC> GlobalSamplers::GetSamplers() {
 	return { sampleData.arr.data(), sampleData.arr.size() };
 }
 
-std::span<D3D12_STATIC_SAMPLER_DESC> GlobalSamplers::GetSsaoSamplers() {
-	return { sampleDataSsao.arr.data(), sampleDataSsao.arr.size() };
+std::span<D3D12_STATIC_SAMPLER_DESC> GlobalSamplers::GetSSAOSamplers() {
+	return { sampleDataSSAO.arr.data(), sampleDataSSAO.arr.size() };
 }

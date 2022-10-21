@@ -50,6 +50,8 @@ namespace Chen::CDX12 {
         void SetNumCpuDSV(uint32_t num) { numCpuDSV = num; }
         void SetNumGpuCSU_Static(uint32_t num) { numGpuCSU_static = num; }
         void SetNumGpuCSU_Dynamic(uint32_t num) { numGpuCSU_dynamic = num; }
+        ID3D12CommandAllocator* GetCurFrameCommandAllocator() noexcept;
+        void FlushCommandQueue();
 
     protected:
         virtual void CreateRtvAndDsvDescriptorHeaps();
@@ -111,6 +113,9 @@ namespace Chen::CDX12 {
 
         // DescriptorHeapMngr::GetInstance();  // this is the DescriptorHeap Manager For the App; 
 
+        Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
+		UINT64 mCurrentFence = 0;
+
         DescriptorHeapAllocation rtvCpuDH;
         DescriptorHeapAllocation dsvCpuDH;
         DescriptorHeapAllocation csuCpuDH;
@@ -129,8 +134,8 @@ namespace Chen::CDX12 {
         int mClientHeight = 800;
 
         // Initial Total Descriptor_Num
-        uint32_t numCpuRTV = 10;
-        uint32_t numCpuDSV = 10;
+        uint32_t numCpuRTV = 168;
+        uint32_t numCpuDSV = 168;
         uint32_t numCpuCSU = 168;
         uint32_t numGpuCSU_static = 168;
         uint32_t numGpuCSU_dynamic = 168;

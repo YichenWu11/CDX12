@@ -8,6 +8,6 @@ namespace Chen::CDX12 {
     {
     public:
         static std::span<D3D12_STATIC_SAMPLER_DESC> GetSamplers();
-        static std::span<D3D12_STATIC_SAMPLER_DESC> GetSsaoSamplers();
+        static std::span<D3D12_STATIC_SAMPLER_DESC> GetSSAOSamplers();
     };
 }

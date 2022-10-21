@@ -1,6 +1,6 @@
 #include <CDX12/GCmdList.h>
 
-#include <CDX12/_deps/DirectXTK12/DirectXHelpers.h>
+#include "DirectXHelpers.h"
 
 using namespace Chen::CDX12;
 

@@ -1,37 +1,70 @@
 #include <CDX12/Material/TextureMngr.h>
-#include <CDX12/Common/DDSTextureLoader.h>
 #include <CDX12/DescriptorHeapMngr.h>
+#include "WICTextureLoader.h"
+#include "DDSTextureLoader.h"
 
 using namespace Chen::CDX12;
 
-TextureMngr::TextureMngr(int size)
+TextureMngr::TextureMngr(ID3D12Device* device, int size) : resourceUpload(device)
 {
+    textureSrvAllocation = DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Allocate(size);
+    assert(textureSrvAllocation.IsNull());
 }
-
 
 TextureMngr::~TextureMngr()
 {
+    DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Free(std::move(textureSrvAllocation));
 }
 
-// return the index of the texture
-size_t TextureMngr::CreateDDSTextureFromFile(
+size_t TextureMngr::CreateTextureFromFile(
     ID3D12Device* device,
-    ID3D12GraphicsCommandList* cmdList,
-    const std::wstring& path, 
-    const std::string& name, 
+    ID3D12CommandQueue* cmdQueue,
+    const std::wstring& path,
+    const std::string& name,
+    TexFileFormat format,
     TextureDimension dimension)
 {
     if (name2index.find(name) != name2index.end()) return InvalidIndex;  // name_only
+    resourceUpload.Begin();
     auto tex = std::make_unique<Texture>(dimension);
     tex->Filename = path;
     tex->Name = name;
-    ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(device,
-        cmdList, tex->Filename.c_str(),
-        tex->Resource, tex->UploadHeap));
-    mTextures[tex->Name] = std::move(tex);
-    name2index[tex->Name] = mTextures.size();
 
-    // TODO: Whether to create the SRV of the texture directly here
+    if (format == TexFileFormat::WIC)
+    {
+        ThrowIfFailed(DirectX::CreateWICTextureFromFile(
+            device,
+            resourceUpload,
+            path.c_str(),
+            tex->Resource.ReleaseAndGetAddressOf()));
+    }
+    else if (format == TexFileFormat::DDS)
+    {
+        ThrowIfFailed(DirectX::CreateDDSTextureFromFile(
+            device,
+            resourceUpload,
+            path.c_str(),
+            tex->Resource.ReleaseAndGetAddressOf()));
+    }
+    else
+    {
+        return InvalidIndex;
+    }
 
-    return name2index[tex->Name];
+    auto uploadResourcesFinished = resourceUpload.End(cmdQueue);
+    uploadResourcesFinished.wait();
+
+    mTextures[name] = std::move(tex);
+    name2index[name] = mTextures.size();
+    nameList.push_back(name);
+
+    // TODO: CreateShaderResourceView
+    D3D12_SHADER_RESOURCE_VIEW_DESC desc = mTextures[name]->GetTexSrvDesc();
+    device->CreateShaderResourceView(
+        mTextures[name]->Resource.Get(),
+        &desc,
+        textureSrvAllocation.GetCpuHandle(name2index[name])
+    );
+
+    return name2index[name];
 }

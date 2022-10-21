@@ -32,12 +32,20 @@ DX12App::DX12App(HINSTANCE hInstance)
 DX12App::~DX12App()
 {
 	if (mDevice.Get() != nullptr)
-		mFrameResourceMngr->EndFrame(mCmdQueue.Get()); // sync
+		FlushCommandQueue();
 
-	DescriptorHeapMngr::GetInstance().GetRTVCpuDH()->Free(std::move(rtvCpuDH));
-	DescriptorHeapMngr::GetInstance().GetDSVCpuDH()->Free(std::move(dsvCpuDH));
-	DescriptorHeapMngr::GetInstance().GetCSUCpuDH()->Free(std::move(csuCpuDH));
-	DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Free(std::move(csuGpuDH));
+	if (!rtvCpuDH.IsNull())
+		DescriptorHeapMngr::GetInstance().GetRTVCpuDH()->Free(std::move(rtvCpuDH));
+	if (!dsvCpuDH.IsNull())
+		DescriptorHeapMngr::GetInstance().GetDSVCpuDH()->Free(std::move(dsvCpuDH));
+	if (!csuCpuDH.IsNull())
+		DescriptorHeapMngr::GetInstance().GetCSUCpuDH()->Free(std::move(csuCpuDH));
+	if (!csuGpuDH.IsNull())
+		DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Free(std::move(csuGpuDH));
+
+	DescriptorHeapMngr::GetInstance().Clear();
+
+	mApp = nullptr;
 }
 
 HINSTANCE DX12App::AppInst()const
@@ -100,6 +108,8 @@ bool DX12App::Initialize()
 	// Do the initial resize code.
 	OnResize();
 
+	FlushCommandQueue();
+
 	return true;
 }
 
@@ -117,8 +127,7 @@ void DX12App::OnResize()
 	assert(mDirectCmdListAlloc);
 
 	// Flush before changing any resources.
-	mFrameResourceMngr->EndFrame(mCmdQueue.Get());
-	mFrameResourceMngr->BeginFrame();
+	FlushCommandQueue();
 
 	ThrowIfFailed(mCmdList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
@@ -179,8 +188,7 @@ void DX12App::OnResize()
 	mCmdQueue.Execute(mCmdList.Get());
 
 	// Flush before changing any resources.
-	mFrameResourceMngr->EndFrame(mCmdQueue.Get());
-	mFrameResourceMngr->BeginFrame();
+	FlushCommandQueue();
 
 	// Update the viewport transform to cover the client area.
 	mScreenViewport.TopLeftX = 0.0f;
@@ -397,12 +405,8 @@ bool DX12App::InitDirect3D()
 		&msQualityLevels,
 		sizeof(msQualityLevels)));
 
-#ifdef _DEBUG
-	LogAdapters();
-#endif
-
-	CreateCommandObjects();            
-	CreateSwapChain();		
+	ThrowIfFailed(mDevice->CreateFence(mCurrentFence, D3D12_FENCE_FLAG_NONE,
+		IID_PPV_ARGS(&mFence)));
 
 	DescriptorHeapMngr::GetInstance().Init(
 		mDevice.Get(),
@@ -410,13 +414,16 @@ bool DX12App::InitDirect3D()
 		numCpuRTV,
 		numCpuDSV,
 		numGpuCSU_static,
-		numGpuCSU_dynamic
-	);
+		numGpuCSU_dynamic);
 
 	mFrameResourceMngr = std::make_unique<FrameResourceMngr>(gNumFrameResource, mDevice.Get());
 
+#ifdef _DEBUG
+	LogAdapters();
+#endif
+	CreateCommandObjects();            
+	CreateSwapChain();
 	CreateRtvAndDsvDescriptorHeaps();   
-
 	return true;
 }
 
@@ -473,6 +480,34 @@ void DX12App::CreateSwapChain()
 		mCmdQueue.Get(),
 		&sd,
 		mSwapChain.GetAddressOf()));
+}
+
+void DX12App::FlushCommandQueue() {
+	// Advance the fence value to mark commands up to this fence point.
+	mCurrentFence++;
+
+	// Add an instruction to the command queue to set a new fence point.  Because we 
+	// are on the GPU timeline, the new fence point won't be set until the GPU finishes
+	// processing all the commands prior to this Signal().
+	ThrowIfFailed(mCmdQueue->Signal(mFence.Get(), mCurrentFence));
+
+	// Wait until the GPU has completed commands up to this fence point.
+	if (mFence->GetCompletedValue() < mCurrentFence)
+	{
+		HANDLE eventHandle = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
+
+		// Fire event when GPU hits current fence.  
+		ThrowIfFailed(mFence->SetEventOnCompletion(mCurrentFence, eventHandle));
+
+		// Wait until the GPU hits current fence event is fired.
+		WaitForSingleObject(eventHandle, INFINITE);
+		CloseHandle(eventHandle);
+	}
+}
+
+ID3D12CommandAllocator* DX12App::GetCurFrameCommandAllocator() noexcept
+{
+	return mFrameResourceMngr->GetCurrentFrameResource()->GetAllocator();
 }
 
 ID3D12Resource* DX12App::CurrentBackBuffer() const

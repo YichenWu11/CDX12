@@ -21,7 +21,6 @@ add_library(${PROJECT_NAME}
     src/core/Common/GameTimer.cpp
     src/core/Common/DX12App.cpp
     src/core/Common/Camera.cpp
-    src/core/Common/DDSTextureLoader.cpp
     
     src/core/Geometry/GeometryGenerator.cpp
     src/core/Geometry/MeshMngr.cpp
