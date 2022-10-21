@@ -16,6 +16,11 @@ namespace Chen::CDX12 {
     class MeshMngr 
     {
     public:
+        enum class FileFormat : uint8_t
+        {
+            txt = 0,
+        };
+
         MeshMngr(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList);
         ~MeshMngr() = default;
         MeshMngr(const MeshMngr&) = delete;

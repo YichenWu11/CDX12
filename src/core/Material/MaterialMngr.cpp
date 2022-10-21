@@ -27,5 +27,7 @@ void MaterialMngr::CreateMaterial(
 	mat->FresnelR0 = FresnelR0;
 	mat->Roughness = Roughness;
 
+    nameList.push_back(name);
+
 	mMaterials.try_emplace(name, std::move(mat));
 }

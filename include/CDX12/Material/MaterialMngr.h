@@ -49,7 +49,10 @@ namespace Chen::CDX12 {
 
 	        const BasicMaterial* GetMaterial(const std::string &name) const;
 
+            std::vector<std::string>& GetMatNameList() { return nameList; }
+
         private:
             std::unordered_map<std::string, std::unique_ptr<BasicMaterial>> mMaterials;
+            std::vector<std::string> nameList;
     };
 }

@@ -51,9 +51,6 @@ size_t TextureMngr::CreateTextureFromFile(
         return InvalidIndex;
     }
 
-    auto uploadResourcesFinished = resourceUpload.End(cmdQueue);
-    uploadResourcesFinished.wait();
-
     mTextures[name] = std::move(tex);
     name2index[name] = mTextures.size();
     nameList.push_back(name);
@@ -65,6 +62,9 @@ size_t TextureMngr::CreateTextureFromFile(
         &desc,
         textureSrvAllocation.GetCpuHandle(name2index[name])
     );
+
+    auto uploadResourcesFinished = resourceUpload.End(cmdQueue);
+    uploadResourcesFinished.wait();
 
     return name2index[name];
 }
