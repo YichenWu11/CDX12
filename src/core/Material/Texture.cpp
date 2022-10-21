@@ -3,7 +3,7 @@
 
 using namespace Chen::CDX12;
 
-D3D12_SHADER_RESOURCE_VIEW_DESC Texture::GetSrvDesc() 
+D3D12_SHADER_RESOURCE_VIEW_DESC Texture::GetTexSrvDesc() 
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC texDesc;
     memset(&texDesc, 0, sizeof(D3D12_SHADER_RESOURCE_VIEW_DESC));

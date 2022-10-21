@@ -37,7 +37,7 @@ namespace Chen::CDX12 {
         // 一个 MeshGeometry 结构体能够存储一组顶点/索引缓冲区中的多个几何体
         std::unordered_map<std::string, SubmeshGeometry> DrawArgs;
 
-        D3D12_VERTEX_BUFFER_VIEW VertexBufferView()const
+        D3D12_VERTEX_BUFFER_VIEW VertexBufferView() const
         {
             D3D12_VERTEX_BUFFER_VIEW vbv;  // 返回一个顶点缓冲区描述符
             vbv.BufferLocation = VertexBufferGPU->GetGPUVirtualAddress();
@@ -47,7 +47,7 @@ namespace Chen::CDX12 {
             return vbv;
         }
 
-        D3D12_INDEX_BUFFER_VIEW IndexBufferView()const
+        D3D12_INDEX_BUFFER_VIEW IndexBufferView() const
         {
             D3D12_INDEX_BUFFER_VIEW ibv;  // 返回一个索引缓冲区描述符
             ibv.BufferLocation = IndexBufferGPU->GetGPUVirtualAddress();

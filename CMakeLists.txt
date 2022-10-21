@@ -15,7 +15,6 @@ add_library(${PROJECT_NAME}
     src/core/CmdQueue.cpp
     src/core/CmdListHandle.cpp
     src/core/GCmdList.cpp
-    src/core/UploadBuffer.cpp
     src/core/FrameResource.cpp
     src/core/FrameResourceMngr.cpp
 
@@ -26,6 +25,8 @@ add_library(${PROJECT_NAME}
     
     src/core/Geometry/GeometryGenerator.cpp
     src/core/Geometry/MeshMngr.cpp
+
+    src/core/Resource/Buffer.cpp
     
     src/core/Shader/GlobalSamplers.cpp
     src/core/Shader/Shader.cpp

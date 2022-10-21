@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DXUtil.h"
-#include "UploadBuffer.h"
 #include "Math/MathHelper.h"
 #include "CmdListHandle.h"
 #include "GCmdList.h"

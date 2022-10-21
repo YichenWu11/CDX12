@@ -1,14 +1,17 @@
-#include "./DXUtil.h"
-#include "./Metalib.h"
+#pragma once
+
+#include "../DXUtil.h"
+#include "../Metalib.h"
+#include "Buffer.h"
 
 namespace Chen::CDX12 {
     template<typename T>
-    class UploadBuffer
+    class UploadBuffer final : public Buffer
     {
     public:
         // 可用于各种类型的上传缓冲区
         UploadBuffer(ID3D12Device* device, UINT elementCount, bool isConstantBuffer) :
-            mIsConstantBuffer(isConstantBuffer)
+            Buffer(device), mIsConstantBuffer(isConstantBuffer)
         {
             mElementByteSize = sizeof(T);
 
@@ -23,15 +26,15 @@ namespace Chen::CDX12 {
                 nullptr,
                 IID_PPV_ARGS(&mUploadBuffer)));
 
-            // 通过 CPU（mMappedData）为常量缓冲区资源更新数据
             ThrowIfFailed(mUploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mMappedData)));
-
-            // 只要还会修改当前的资源，我们就无须取消映射
-            // 但是，在资源被GPU使用期间，我们千万不可向该资源进行写操作（所以必须借助于同步技术）
         }
 
         UploadBuffer(const UploadBuffer& rhs) = delete;
         UploadBuffer& operator=(const UploadBuffer& rhs) = delete;
+
+        ID3D12Resource* GetResource() const override { return mUploadBuffer.Get(); }
+        D3D12_RESOURCE_STATES GetInitState() const override { return D3D12_RESOURCE_STATE_GENERIC_READ; }
+        uint64_t GetByteSize() const override { return mElementByteSize; }
 
         ~UploadBuffer()
         {
@@ -39,11 +42,6 @@ namespace Chen::CDX12 {
                 mUploadBuffer->Unmap(0, nullptr);
 
             mMappedData = nullptr;
-        }
-
-        ID3D12Resource* Resource()const
-        {
-            return mUploadBuffer.Get();
         }
 
         void CopyData(int elementIndex, const T& data)

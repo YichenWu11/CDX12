@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Resource/Resource.h"
 #include "../DXUtil.h"
 
 namespace Chen::CDX12 {
@@ -13,20 +14,25 @@ namespace Chen::CDX12 {
         Tex2DArray,
     };
 
-    struct Texture
+    class Texture
     {
-        // Unique material name for lookup.
-        std::string Name;
-
-        std::wstring Filename;
-
-        Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
-        Microsoft::WRL::ComPtr<ID3D12Resource> UploadHeap = nullptr;
-
-        TextureDimension dimension;
-
+    public:
+        // FIXME: Resource inheritance error
         Texture(TextureDimension _dimension = TextureDimension::Tex2D) : dimension(_dimension) {}
 
-        D3D12_SHADER_RESOURCE_VIEW_DESC GetSrvDesc();
+        ~Texture() {}
+
+        D3D12_SHADER_RESOURCE_VIEW_DESC GetTexSrvDesc();
+        ID3D12Resource* GetResource() const { return Resource.Get(); }
+        D3D12_RESOURCE_STATES GetInitState() const { return D3D12_RESOURCE_STATE_COMMON; }
+        ID3D12Resource* GetUploadHeap() const { return UploadHeap.Get(); }
+
+        std::string Name; // Unique Texture name for lookup.
+        std::wstring Filename;
+        ComPtr<ID3D12Resource> Resource = nullptr;
+        ComPtr<ID3D12Resource> UploadHeap = nullptr;
+
+    private:
+        TextureDimension dimension;
     };
 }
