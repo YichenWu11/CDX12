@@ -16,7 +16,7 @@ namespace Chen::CDX12 {
     class MeshMngr 
     {
     public:
-        enum class FileFormat : uint8_t
+        enum class MeshFileFormat : uint8_t
         {
             txt = 0,
         };

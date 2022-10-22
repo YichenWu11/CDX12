@@ -14,7 +14,7 @@ namespace Chen::CDX12 {
             WIC
         };
 
-        TextureMngr(ID3D12Device* device, int size);
+        TextureMngr(ID3D12Device* device, int size = 168);
         ~TextureMngr();
         TextureMngr(const TextureMngr&)            = delete;
         TextureMngr& operator=(const TextureMngr&) = delete;

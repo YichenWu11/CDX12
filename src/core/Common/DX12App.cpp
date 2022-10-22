@@ -43,8 +43,6 @@ DX12App::~DX12App()
 	if (!csuGpuDH.IsNull())
 		DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Free(std::move(csuGpuDH));
 
-	DescriptorHeapMngr::GetInstance().Clear();
-
 	mApp = nullptr;
 }
 
@@ -415,6 +413,8 @@ bool DX12App::InitDirect3D()
 		numCpuDSV,
 		numGpuCSU_static,
 		numGpuCSU_dynamic);
+
+	RenderResourceMngr::GetInstance().Init(mDevice.Get(), mCmdList.Get());
 
 	mFrameResourceMngr = std::make_unique<FrameResourceMngr>(gNumFrameResource, mDevice.Get());
 

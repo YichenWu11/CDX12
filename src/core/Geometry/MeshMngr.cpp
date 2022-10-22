@@ -8,7 +8,7 @@ using namespace DirectX;
 
 MeshMngr::MeshMngr(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList) : device(device), cmdList(cmdList)
 {
-    BuildBasicGeo();
+    this->BuildBasicGeo();
 }
 
 void MeshMngr::BuildBasicGeo()
@@ -268,10 +268,6 @@ void MeshMngr::BuildTXTModelGeometryFromFile(
 	}
 
 	fin.close();
-
-	//
-	// Pack the indices of all the meshes into one index buffer.
-	//
 
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
 

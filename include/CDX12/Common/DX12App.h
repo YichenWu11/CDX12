@@ -24,6 +24,7 @@
 #include "../FrameResourceMngr.h"
 #include "../Metalib.h"
 #include "../GeneralDesc.h"
+#include "../RenderResourceMngr.h"
 
 namespace Chen::CDX12 {
     class DX12App
@@ -86,19 +87,24 @@ namespace Chen::CDX12 {
 
         int gNumFrameResource = 3; // 3 frameResources
 
-        HINSTANCE mhAppInst = nullptr; // application instance handle
-        HWND      mhMainWnd = nullptr; // main window handle
-        bool      mAppPaused = false;  // is the application paused?
-        bool      mMinimized = false;  // is the application minimized?
-        bool      mMaximized = false;  // is the application maximized?
-        bool      mResizing = false;   // are the resize bars being dragged?
-        bool      mFullscreenState = false;// fullscreen enabled
+        HINSTANCE mhAppInst  = nullptr; // application instance handle
+        HWND      mhMainWnd  = nullptr; // main window handle
+        bool      mAppPaused = false;   // is the application paused?
+        bool      mMinimized = false;   // is the application minimized?
+        bool      mMaximized = false;   // is the application maximized?
+        bool      mResizing  = false;   // are the resize bars being dragged?
+        bool      mFullscreenState = false;
 
         GameTimer mTimer;
-
         Device mDevice;
         Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;
-        Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain; 
+        static const int SwapChainBufferCount = 2;
+        int mCurrBackBuffer = 0;
+        Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;
+        Microsoft::WRL::ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
+        Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
+        UINT64 mCurrentFence = 0;
+        Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
 
         CmdQueue mCmdQueue;
         GCmdList mCmdList;
@@ -106,15 +112,8 @@ namespace Chen::CDX12 {
 
         std::unique_ptr<FrameResourceMngr> mFrameResourceMngr;
 
-        static const int SwapChainBufferCount = 2;
-        int mCurrBackBuffer = 0;
-        Microsoft::WRL::ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
-        Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
-
-        // DescriptorHeapMngr::GetInstance();  // this is the DescriptorHeap Manager For the App; 
-
-        Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
-		UINT64 mCurrentFence = 0;
+        // DescriptorHeapMngr::GetInstance();  // this is the DescriptorHeap Manager For the App;
+        // RenderResourceMngr::GetInstance();
 
         DescriptorHeapAllocation rtvCpuDH;
         DescriptorHeapAllocation dsvCpuDH;

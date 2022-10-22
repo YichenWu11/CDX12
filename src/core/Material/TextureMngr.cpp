@@ -13,7 +13,8 @@ TextureMngr::TextureMngr(ID3D12Device* device, int size) : resourceUpload(device
 
 TextureMngr::~TextureMngr()
 {
-    DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Free(std::move(textureSrvAllocation));
+    if (!textureSrvAllocation.IsNull())
+        DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Free(std::move(textureSrvAllocation));
 }
 
 size_t TextureMngr::CreateTextureFromFile(

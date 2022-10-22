@@ -20,12 +20,6 @@ namespace Chen::CDX12 {
         // FIXME: Resource inheritance error
         Texture(TextureDimension _dimension = TextureDimension::Tex2D) : dimension(_dimension) {}
 
-        ~Texture() 
-        {
-            Resource.Reset();
-            UploadHeap.Reset();
-        }
-
         D3D12_SHADER_RESOURCE_VIEW_DESC GetTexSrvDesc();
         ID3D12Resource* GetResource() const { return Resource.Get(); }
         D3D12_RESOURCE_STATES GetInitState() const { return D3D12_RESOURCE_STATE_COMMON; }

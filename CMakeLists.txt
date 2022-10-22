@@ -17,6 +17,7 @@ add_library(${PROJECT_NAME}
     src/core/GCmdList.cpp
     src/core/FrameResource.cpp
     src/core/FrameResourceMngr.cpp
+    src/core/RenderResourceMngr.cpp
 
     src/core/Common/GameTimer.cpp
     src/core/Common/DX12App.cpp
@@ -31,6 +32,7 @@ add_library(${PROJECT_NAME}
     src/core/Shader/Shader.cpp
     src/core/Shader/BasicShader.cpp
     src/core/Shader/PSOManager.cpp
+    src/core/Shader/ShaderMngr.cpp
 
     src/core/Material/Texture.cpp
     src/core/Material/MaterialMngr.cpp
