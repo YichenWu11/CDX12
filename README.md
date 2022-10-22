@@ -17,4 +17,4 @@ DX12 C++ Wrapper
 * *C++20*
 * *MSVC only*
 * *Unicode 字符集*
-* *DirectXTK12 (通过 NuGet 包引入, Visual Studio 2022 only)*
+* *DirectXTK12 (从 NuGet 改为直接由 CMake Subdirectory 引入)* 

@@ -50,6 +50,8 @@ add_library(${PROJECT_NAME}
     src/core/Math/MathHelper.cpp
 )
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/DirectXTK12 ${CMAKE_BINARY_DIR}/bin/CMake/DirectXTK12)
+
 add_library(Chen::CDX12 ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
@@ -60,4 +62,5 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC d3d12.lib
     PUBLIC dxgi.lib
     PUBLIC d3dcompiler.lib
+    PUBLIC DirectXTK12
 ) 

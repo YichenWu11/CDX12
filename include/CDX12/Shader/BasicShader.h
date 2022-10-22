@@ -22,10 +22,38 @@ namespace Chen::CDX12 {
             std::span<std::pair<std::string, Property> const> properties,
             ComPtr<ID3D12RootSignature>&& rootSig);
         
-        void SetVsShader(const wchar_t* path) {vsShader = DXUtil::CompileShader(path, nullptr, "VS", "vs_5_1");}
-        void SetPsShader(const wchar_t* path) {psShader = DXUtil::CompileShader(path, nullptr, "PS", "ps_5_1");}
-        void SetHsShader(const wchar_t* path) {hsShader = DXUtil::CompileShader(path, nullptr, "HS", "hs_5_1");}
-        void SetDsShader(const wchar_t* path) {dsShader = DXUtil::CompileShader(path, nullptr, "DS", "ds_5_1");}
+        void SetVsShader(
+            const wchar_t* path,
+            const std::vector<D3D_SHADER_MACRO>& shaderDefines = std::vector<D3D_SHADER_MACRO>())
+        {
+            if (path != nullptr)
+                vsShader = DXUtil::CompileShader(path, shaderDefines.data(), "VS", "vs_5_1"); 
+        }
+
+        void SetPsShader(
+            const wchar_t* path,
+            const std::vector<D3D_SHADER_MACRO>& shaderDefines = std::vector<D3D_SHADER_MACRO>())
+        {   
+            if (path != nullptr)
+                psShader = DXUtil::CompileShader(path, shaderDefines.data(), "PS", "ps_5_1");
+        }
+
+
+        void SetHsShader(
+            const wchar_t* path,
+            const std::vector<D3D_SHADER_MACRO>& shaderDefines = std::vector<D3D_SHADER_MACRO>()) 
+        {
+            if (path != nullptr)
+                hsShader = DXUtil::CompileShader(path, shaderDefines.data(), "HS", "hs_5_1"); 
+        }
+
+        void SetDsShader(
+            const wchar_t* path,
+            const std::vector<D3D_SHADER_MACRO>& shaderDefines = std::vector<D3D_SHADER_MACRO>()) 
+        {
+            if (path != nullptr)
+                dsShader = DXUtil::CompileShader(path, shaderDefines.data(), "DS", "ds_5_1");
+        }
 
         void SetRasterizerState(D3D12_RASTERIZER_DESC desc) { rasterizerState = desc; }
         void SetDepthStencilState(D3D12_DEPTH_STENCIL_DESC desc) { depthStencilState = desc; }
