@@ -20,3 +20,5 @@ void ShaderMngr::CreateShader(
 	mShaders[name] = std::move(shader);
 	nameList.push_back(name);
 }
+
+ShaderMngr::~ShaderMngr() {}
