@@ -18,3 +18,7 @@ DX12 C++ Wrapper
 * *MSVC only*
 * *Unicode 字符集*
 * *DirectXTK12 (从 NuGet 改为直接由 CMake Subdirectory 引入)* 
+
+---
+
+***每天默念三遍：对扩展开放，对修改关闭 !!!***

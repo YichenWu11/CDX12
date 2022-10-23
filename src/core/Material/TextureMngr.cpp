@@ -56,7 +56,6 @@ size_t TextureMngr::CreateTextureFromFile(
     name2index[name] = mTextures.size();
     nameList.push_back(name);
 
-    // TODO: CreateShaderResourceView
     D3D12_SHADER_RESOURCE_VIEW_DESC desc = mTextures[name]->GetTexSrvDesc();
     device->CreateShaderResourceView(
         mTextures[name]->Resource.Get(),
