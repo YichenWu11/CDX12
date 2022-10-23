@@ -5,6 +5,7 @@ project(CDX12)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILECOMMANDS ON)
+add_definitions("-DUNICODE" "-D_UNICODE")
 
 add_library(${PROJECT_NAME} 
     src/core/VarSizeAllocMngr.cpp
