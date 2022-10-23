@@ -51,7 +51,8 @@ add_library(${PROJECT_NAME}
     src/core/Math/MathHelper.cpp
 )
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/DirectXTK12 ${CMAKE_BINARY_DIR}/bin/CMake/DirectXTK12)
+add_subdirectory(${CDX12_SOURCE_DIR}/DirectXTK12 ${CDX12_BINARY_DIR}/bin/CMake/DirectXTK12)
+# add_subdirectory(${CMAKE_SOURCE_DIR}/DirectXTK12 ${CMAKE_BINARY_DIR}/bin/CMake/DirectXTK12)
 
 add_library(Chen::CDX12 ALIAS ${PROJECT_NAME})
 
