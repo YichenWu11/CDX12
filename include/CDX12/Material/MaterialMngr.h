@@ -4,6 +4,7 @@
 #include "../DXUtil.h"
 
 namespace Chen::CDX12 {
+    // The Top Material class
     struct BasicMaterial
     {
         std::string Name;             // Unique material name for lookup.
