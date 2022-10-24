@@ -8,14 +8,13 @@ namespace Chen::CDX12 {
     struct BasicMaterial
     {
         std::string Name;             // Unique material name for lookup.
-        int MatCBIndex = -1;          // Index into constant buffer corresponding to this material.
+        int MatIndex = -1;          // Index into constant buffer corresponding to this material.
         int DiffuseSrvHeapIndex = -1; // Index into SRV heap for diffuse texture.
         int NormalSrvHeapIndex = -1;  // Index into SRV heap for normal texture.
         DirectX::XMFLOAT4 DiffuseAlbedo{ 1.0f, 1.0f, 1.0f, 1.0f };
         DirectX::XMFLOAT3 FresnelR0{ 0.01f, 0.01f, 0.01f };
         float Roughness = 0.25f;
         DirectX::XMFLOAT4X4 MatTransform{Math::MathHelper::Identity4x4()};
-        int NumFramesDirty = 3;
     };
 
     // structed buffer content (will be passed to shader)

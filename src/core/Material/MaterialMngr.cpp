@@ -20,7 +20,7 @@ void MaterialMngr::CreateMaterial(
 {
     auto mat = std::make_unique<BasicMaterial>();
 	mat->Name = name;
-	mat->MatCBIndex = mMaterials.size();
+	mat->MatIndex = mMaterials.size();
 	mat->DiffuseSrvHeapIndex = DiffuseSrvHeapIndex;
 	mat->NormalSrvHeapIndex = NormalSrvHeapIndex;
 	mat->DiffuseAlbedo = DiffuseAlbedo;

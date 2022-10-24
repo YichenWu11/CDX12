@@ -83,8 +83,8 @@ int DX12App::Run()
 			if (!mAppPaused)
 			{
 				CalculateFrameStats();
-				Update(mTimer);
-				Draw(mTimer);
+				LogicTick(mTimer);
+				RenderTick(mTimer);
 			}
 			else
 			{
