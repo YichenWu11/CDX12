@@ -47,12 +47,14 @@ namespace Chen::CDX12 {
                 float Roughness,
                 int NormalSrvHeapIndex = -1);
 
-	        const BasicMaterial* GetMaterial(const std::string &name) const;
+	        BasicMaterial* GetMaterial(const std::string &name) const;
 
             std::vector<std::string>& GetMatNameList() { return nameList; }
 
+            std::map<std::string, std::unique_ptr<BasicMaterial>>& GetAllMats() { return mMaterials; }
+
         private:
-            std::unordered_map<std::string, std::unique_ptr<BasicMaterial>> mMaterials;
+            std::map<std::string, std::unique_ptr<BasicMaterial>> mMaterials;
             std::vector<std::string> nameList;
     };
 }

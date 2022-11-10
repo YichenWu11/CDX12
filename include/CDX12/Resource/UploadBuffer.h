@@ -9,7 +9,6 @@ namespace Chen::CDX12 {
     class UploadBuffer final : public Buffer
     {
     public:
-        // 可用于各种类型的上传缓冲区
         UploadBuffer(ID3D12Device* device, UINT elementCount, bool isConstantBuffer) :
             Buffer(device), mIsConstantBuffer(isConstantBuffer)
         {

@@ -39,8 +39,42 @@ namespace Chen::CDX12 {
 
         std::vector<std::string>& GetTexNameList() { return nameList; }
 
+        DescriptorHeapAllocation& GetTexAllocation() { return textureSrvAllocation; }
+
+        void SetCubeIndex(size_t idx) { cubeIndex = idx; }
+        size_t GetCubeIndex() { return cubeIndex; }
+
+        void SetSMIndex(size_t idx) { shadowMapIndex = idx; }
+        size_t GetSMIndex() { return shadowMapIndex; }
+
+        void SetSSAOIdxStart(size_t idx) { mSsaoHeapIndexStart = idx; }
+        size_t GetSSAOIdxStart() { return mSsaoHeapIndexStart; }
+
+        void SetNullCubeIdx(size_t idx) { mNullCubeSrvIndex = idx; }
+        size_t GetNullCubeIdx() { return mNullCubeSrvIndex; }
+
+        void SetCGLutIndex(size_t idx) { cgLutIndex = idx; }
+        size_t GetCGLutIndex() { return cgLutIndex; }
+
+        std::string GetTexNameFromID(int id)
+        {
+            for (auto& iter : name2index)
+            {
+                if (iter.second == id)
+                    return iter.first;
+            }
+            return std::string();
+        }
+
     private:
         size_t InvalidIndex = -1;
+        size_t cubeIndex = 0;
+        size_t shadowMapIndex = 0;
+        size_t cgLutIndex = 0;
+
+        size_t mSsaoHeapIndexStart = 0;
+        size_t mNullCubeSrvIndex = 0;
+
         std::unordered_map<std::string, size_t> name2index;
         std::map<std::string, std::unique_ptr<Texture>> mTextures;
         std::vector<std::string> nameList;

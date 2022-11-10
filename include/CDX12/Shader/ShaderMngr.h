@@ -16,8 +16,19 @@ namespace Chen::CDX12 {
 		size_t GetShaderNum() { return mShaders.size(); }
 
 		void CreateShader(
-			std::string& name,
+			const std::string& name,
 			std::span<std::pair<std::string, Shader::Property> const> properties,
+			const wchar_t* vsPath,
+			const wchar_t* psPath,
+			const wchar_t* hsPath = nullptr,
+			const wchar_t* dsPath = nullptr,
+			const std::vector<D3D_SHADER_MACRO> shaderDefines = std::vector<D3D_SHADER_MACRO>(),
+			std::span<D3D12_STATIC_SAMPLER_DESC> samplers = GlobalSamplers::GetSamplers());
+
+		void CreateShader(
+			const std::string& name,
+			std::span<std::pair<std::string, Shader::Property> const> properties,
+			ComPtr<ID3D12RootSignature>&& rootSig,
 			const wchar_t* vsPath,
 			const wchar_t* psPath,
 			const wchar_t* hsPath = nullptr,

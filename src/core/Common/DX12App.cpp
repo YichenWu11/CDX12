@@ -9,8 +9,6 @@ using namespace DirectX;
 LRESULT CALLBACK
 MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	// Forward hwnd on because we can get messages (e.g., WM_CREATE)
-	// before CreateWindow returns, and thus before mhMainWnd is valid.
 	return DX12App::GetAppInstance()->MsgProc(hwnd, msg, wParam, lParam);
 }
 
@@ -58,7 +56,7 @@ HWND DX12App::MainWnd()const
 
 float DX12App::AspectRatio()const
 {
-	return static_cast<float>(mClientWidth) / mClientHeight;
+	return static_cast<float>(mClientWidth) / (mClientHeight);
 }
 
 int DX12App::Run()
@@ -113,9 +111,9 @@ bool DX12App::Initialize()
 
 void DX12App::CreateRtvAndDsvDescriptorHeaps()
 {
-	rtvCpuDH = DescriptorHeapMngr::GetInstance().GetRTVCpuDH()->Allocate(SwapChainBufferCount);
+	rtvCpuDH = DescriptorHeapMngr::GetInstance().GetRTVCpuDH()->Allocate(10);
 
-	dsvCpuDH = DescriptorHeapMngr::GetInstance().GetDSVCpuDH()->Allocate(1);
+	dsvCpuDH = DescriptorHeapMngr::GetInstance().GetDSVCpuDH()->Allocate(10);
 }
 
 void DX12App::OnResize()
@@ -189,6 +187,13 @@ void DX12App::OnResize()
 	FlushCommandQueue();
 
 	// Update the viewport transform to cover the client area.
+	//mScreenViewport.TopLeftX = mClientWidth * 0.1615f;
+	//mScreenViewport.TopLeftY = 0.0f;
+	//mScreenViewport.Width = static_cast<float>(mClientWidth/1.653f);
+	//mScreenViewport.Height = static_cast<float>(mClientHeight/1.335f);
+	//mScreenViewport.MinDepth = 0.0f;
+	//mScreenViewport.MaxDepth = 1.0f;
+
 	mScreenViewport.TopLeftX = 0.0f;
 	mScreenViewport.TopLeftY = 0.0f;
 	mScreenViewport.Width = static_cast<float>(mClientWidth);
@@ -320,8 +325,6 @@ LRESULT DX12App::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
             PostQuitMessage(0);
 		}
-		else if ((int)wParam == VK_SPACE)
-			mAppPaused = !mAppPaused;
 		return 0;
 	}
 
@@ -414,8 +417,6 @@ bool DX12App::InitDirect3D()
 		numGpuCSU_static,
 		numGpuCSU_dynamic);
 
-	RenderResourceMngr::GetInstance().Init(mDevice.Get(), mCmdList.Get());
-
 	mFrameResourceMngr = std::make_unique<FrameResourceMngr>(gNumFrameResource, mDevice.Get());
 
 #ifdef _DEBUG
@@ -423,7 +424,8 @@ bool DX12App::InitDirect3D()
 #endif
 	CreateCommandObjects();            
 	CreateSwapChain();
-	CreateRtvAndDsvDescriptorHeaps();   
+	CreateRtvAndDsvDescriptorHeaps(); 
+	
 	return true;
 }
 
@@ -545,7 +547,7 @@ void DX12App::CalculateFrameStats()
 			L"    fps: " + fpsStr +
 			L"   mspf: " + mspfStr;
 
-		SetWindowText(mhMainWnd, windowText.c_str());
+		// SetWindowText(mhMainWnd, windowText.c_str());
 
 		// Reset for next average.
 		frameCnt = 0;

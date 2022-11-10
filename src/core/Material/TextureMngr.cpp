@@ -8,7 +8,6 @@ using namespace Chen::CDX12;
 TextureMngr::TextureMngr(ID3D12Device* device, int size) : resourceUpload(device)
 {
     textureSrvAllocation = DescriptorHeapMngr::GetInstance().GetCSUGpuDH()->Allocate(size);
-    assert(textureSrvAllocation.IsNull());
 }
 
 TextureMngr::~TextureMngr()
@@ -52,8 +51,8 @@ size_t TextureMngr::CreateTextureFromFile(
         return InvalidIndex;
     }
 
-    mTextures[name] = std::move(tex);
     name2index[name] = mTextures.size();
+    mTextures[name] = std::move(tex);
     nameList.push_back(name);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC desc = mTextures[name]->GetTexSrvDesc();

@@ -34,6 +34,12 @@ namespace Chen::CDX12 {
         DX12App(const DX12App& rhs) = delete;
         DX12App& operator=(const DX12App& rhs) = delete;
         virtual ~DX12App();
+
+        void SetNumCpuCSU(uint32_t num) { numCpuCSU = num; }
+        void SetNumCpuRTV(uint32_t num) { numCpuRTV = num; }
+        void SetNumCpuDSV(uint32_t num) { numCpuDSV = num; }
+        void SetNumGpuCSU_Static(uint32_t num) { numGpuCSU_static = num; }
+        void SetNumGpuCSU_Dynamic(uint32_t num) { numGpuCSU_dynamic = num; }
     public:
         static DX12App* GetAppInstance();
     
@@ -45,12 +51,6 @@ namespace Chen::CDX12 {
     
         virtual bool Initialize();
         virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-        void SetNumCpuCSU(uint32_t num) { numCpuCSU = num; }
-        void SetNumCpuRTV(uint32_t num) { numCpuRTV = num; }
-        void SetNumCpuDSV(uint32_t num) { numCpuDSV = num; }
-        void SetNumGpuCSU_Static(uint32_t num) { numGpuCSU_static = num; }
-        void SetNumGpuCSU_Dynamic(uint32_t num) { numGpuCSU_dynamic = num; }
         ID3D12CommandAllocator* GetCurFrameCommandAllocator() noexcept;
         void FlushCommandQueue();
 
@@ -135,8 +135,8 @@ namespace Chen::CDX12 {
         // Initial Total Descriptor_Num
         uint32_t numCpuRTV = 168;
         uint32_t numCpuDSV = 168;
-        uint32_t numCpuCSU = 168;
-        uint32_t numGpuCSU_static = 168;
-        uint32_t numGpuCSU_dynamic = 168;
+        uint32_t numCpuCSU = 648;
+        uint32_t numGpuCSU_static = 648;
+        uint32_t numGpuCSU_dynamic = 648;
     };
 }

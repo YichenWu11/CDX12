@@ -50,6 +50,8 @@ add_library(${PROJECT_NAME}
 
     src/core/Math/Quaternion.cpp
     src/core/Math/MathHelper.cpp
+
+    src/core/_deps/tinyobjloader/tinyobjloader.cpp
 )
 
 add_subdirectory(${CDX12_SOURCE_DIR}/DirectXTK12 ${CDX12_BINARY_DIR}/bin/CMake/DirectXTK12)

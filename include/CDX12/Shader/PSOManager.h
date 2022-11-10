@@ -17,7 +17,8 @@ namespace Chen::CDX12 {
             UINT rtNum,
             DXGI_FORMAT mBackBufferFormat,
             DXGI_FORMAT mDepthStencilFormat,
-            bool transparent = false);
+            bool transparent = false,
+            bool shadowMap = false);
 
         ID3D12PipelineState* GetPipelineState(const std::string& name) const {
             if (mPSOs.find(name) != mPSOs.end()) {

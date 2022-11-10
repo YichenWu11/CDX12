@@ -53,7 +53,6 @@ namespace Chen::CDX12::Math {
         // Returns the polar angle of the point (x,y) in [0, 2*PI).
         static float AngleFromXY(float x, float y);
 
-        // 球面坐标转笛卡尔坐标系
         static DirectX::XMVECTOR SphericalToCartesian(float radius, float theta, float phi)
         {
             return DirectX::XMVectorSet(

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Mesh.h"
+#include "../_deps/tinyobjloader/tinyobjloader.h"
+#include <map>
 
 namespace Chen::CDX12 {
 
@@ -27,7 +29,13 @@ namespace Chen::CDX12 {
         MeshMngr& operator=(const MeshMngr&) = delete;
 
         MeshGeometry* GetMeshGeo(const std::string& name) {
+            bool is = mGeometries.find(name) != mGeometries.end();
             return (mGeometries.find(name) != mGeometries.end()) ? mGeometries.at(name).get() : nullptr;
+        }
+
+        std::map<std::string, std::unique_ptr<MeshGeometry>>& GetAllGeos()
+        {
+            return mGeometries;
         }
 
         void BuildBasicGeo();
@@ -39,9 +47,13 @@ namespace Chen::CDX12 {
             bool        is_normal, 
             bool        is_uv);
 
+        void BuildOBJModelGeometryFromFile(
+            const char* path, 
+            const char* geoName);
+
     private:
         ID3D12Device* device;
         ID3D12GraphicsCommandList* cmdList;
-        std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
+        std::map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
     };
 }

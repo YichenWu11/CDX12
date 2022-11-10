@@ -2,7 +2,7 @@
 
 using namespace Chen::CDX12;
 
-const BasicMaterial* MaterialMngr::GetMaterial(const std::string &name) const
+BasicMaterial* MaterialMngr::GetMaterial(const std::string &name) const
 {
     if (mMaterials.find(name) != mMaterials.end())
         return mMaterials.at(name).get();

@@ -6,7 +6,7 @@
 namespace Chen::CDX12 {
     enum class TextureDimension : uint8_t 
     {
-        None,
+        None = 0,
         Tex1D,
         Tex2D,
         Tex3D,

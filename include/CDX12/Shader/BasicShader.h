@@ -17,7 +17,8 @@ namespace Chen::CDX12 {
         std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
         BasicShader(
             std::span<std::pair<std::string, Property> const> properties,
-            ID3D12Device* device);
+            ID3D12Device* device,
+            std::span<D3D12_STATIC_SAMPLER_DESC> samplers = GlobalSamplers::GetSamplers());
         BasicShader(
             std::span<std::pair<std::string, Property> const> properties,
             ComPtr<ID3D12RootSignature>&& rootSig);

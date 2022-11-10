@@ -10,7 +10,8 @@ void PSOManager::CreatePipelineState(
     UINT rtNum,
     DXGI_FORMAT mBackBufferFormat,
     DXGI_FORMAT mDepthStencilFormat,
-    bool transparent)
+    bool transparent,
+    bool shadowMap)
 {
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc
         = Desc::PSO::MRT(
@@ -23,6 +24,7 @@ void PSOManager::CreatePipelineState(
             mBackBufferFormat,
             mDepthStencilFormat);
     psoDesc.RasterizerState = shader->rasterizerState;
+    psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
     psoDesc.DepthStencilState = shader->depthStencilState;
     if (!transparent)
         psoDesc.BlendState = shader->blendState;
@@ -47,6 +49,15 @@ void PSOManager::CreatePipelineState(
         psoDesc.BlendState.RenderTarget[0] = transparencyBlendDesc;
         psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
         psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+    }
+    
+    if (shadowMap) 
+    { 
+        psoDesc.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
+        psoDesc.NumRenderTargets = 0;
+        psoDesc.RasterizerState.DepthBias = 100000;
+        psoDesc.RasterizerState.DepthBiasClamp = 0.0f;
+        psoDesc.RasterizerState.SlopeScaledDepthBias = 1.0f;
     }
 
     ThrowIfFailed(device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mPSOs[name])));

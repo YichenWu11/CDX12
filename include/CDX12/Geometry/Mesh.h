@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../DXUtil.h"
+#include <map>
 
 namespace Chen::CDX12 {
     struct SubmeshGeometry
@@ -11,9 +12,6 @@ namespace Chen::CDX12 {
 
         DirectX::BoundingBox Bounds;
     };
-
-    /* 一个 MeshGeometry 中可能含有多个 SubmeshGeometry，通过 map 来对应 */
-    /* 几何图形辅助结构体 */
 
     struct MeshGeometry
     {
@@ -34,25 +32,24 @@ namespace Chen::CDX12 {
         DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT; // DXGI_FORMAT_R16_UINT / DXGI_FORMAT_R32_UINT
         UINT IndexBufferByteSize = 0;   // index buffer total size in bytes
 
-        // 一个 MeshGeometry 结构体能够存储一组顶点/索引缓冲区中的多个几何体
-        std::unordered_map<std::string, SubmeshGeometry> DrawArgs;
+        std::map<std::string, SubmeshGeometry> DrawArgs;
 
         D3D12_VERTEX_BUFFER_VIEW VertexBufferView() const
         {
-            D3D12_VERTEX_BUFFER_VIEW vbv;  // 返回一个顶点缓冲区描述符
+            D3D12_VERTEX_BUFFER_VIEW vbv;  
             vbv.BufferLocation = VertexBufferGPU->GetGPUVirtualAddress();
-            vbv.StrideInBytes = VertexByteStride;    // 类似步长
-            vbv.SizeInBytes = VertexBufferByteSize;  // 类似总长
+            vbv.StrideInBytes = VertexByteStride;   
+            vbv.SizeInBytes = VertexBufferByteSize;
 
             return vbv;
         }
 
         D3D12_INDEX_BUFFER_VIEW IndexBufferView() const
         {
-            D3D12_INDEX_BUFFER_VIEW ibv;  // 返回一个索引缓冲区描述符
+            D3D12_INDEX_BUFFER_VIEW ibv;  
             ibv.BufferLocation = IndexBufferGPU->GetGPUVirtualAddress();
-            ibv.Format = IndexFormat;              // 索引的格式（必须表示为 DXGI_FORMAT_R16_UINT）
-            ibv.SizeInBytes = IndexBufferByteSize; // 待创建视图的索引缓冲区大小
+            ibv.Format = IndexFormat;              
+            ibv.SizeInBytes = IndexBufferByteSize;
 
             return ibv;
         }
@@ -61,6 +58,21 @@ namespace Chen::CDX12 {
         {
             VertexBufferUploader = nullptr;
             IndexBufferUploader  = nullptr;
+        }
+
+        std::vector<std::string> GetSubMeshNameList()
+        {
+            std::vector<std::string> nameList;
+            for (auto& subMesh : DrawArgs)
+            {
+                nameList.push_back(subMesh.first);
+            }
+            return nameList;
+        }
+
+        int GetIndex(std::string name)
+        {
+            return (DrawArgs.find(name) != DrawArgs.end()) ? std::distance(DrawArgs.find(name), DrawArgs.begin()) : -1;
         }
     };
 }

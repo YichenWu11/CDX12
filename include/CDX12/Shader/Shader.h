@@ -32,8 +32,8 @@ namespace Chen::CDX12 {
                 : Property(p) {}
         };
         ComPtr<ID3D12RootSignature> rootSig;
-        std::unordered_map<std::string, InsideProperty> properties;
         std::optional<InsideProperty> GetProperty(std::string_view str) const;  
+        std::unordered_map<std::string, InsideProperty> properties;
     public:
         Shader(
             std::span<std::pair<std::string, Property> const> properties,
