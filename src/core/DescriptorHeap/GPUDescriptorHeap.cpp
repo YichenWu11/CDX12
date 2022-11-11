@@ -32,17 +32,13 @@ GPUDescriptorHeap::GPUDescriptorHeap(
 {
 }
 
-void GPUDescriptorHeap::Free(DescriptorHeapAllocation&& Allocation)
-{
-    auto MgrId = Allocation.GetAllocationManagerId();
-    if(MgrId == 0)
-    {
-        std::lock_guard<std::mutex> LockGuard(m_AllocMutex);
-        m_HeapAllocationManager.FreeAllocation(std::move(Allocation));
-    }
-    else
-    {
-        std::lock_guard<std::mutex> LockGuard(m_DynAllocMutex);
-        m_DynamicAllocationsManager.FreeAllocation(std::move(Allocation));
-    }
+void GPUDescriptorHeap::Free(DescriptorHeapAllocation&& allocation) {
+    auto MgrId = allocation.GetAllocationManagerId();
+    assert((MgrId == StaticHeapAllocatonManagerID || MgrId == DynamicHeapAllocatonManagerID)
+        && "Unexpected allocation manager ID");
+
+    if (MgrId == StaticHeapAllocatonManagerID)
+        m_HeapAllocationManager.FreeAllocation(std::move(allocation));
+    else // MgrId == DynamicHeapAllocatonManagerID
+        m_DynamicAllocationsManager.FreeAllocation(std::move(allocation));
 }

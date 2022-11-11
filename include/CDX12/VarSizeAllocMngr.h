@@ -26,33 +26,9 @@ namespace Chen::CDX12 {
     //                32 ------------------> 104 ---------->  {size = 32, &size2freeblock[3]}
     //
 
-    // 可变长度分配器Manager
     class VarSizeAllocMngr {
     public:
-        using OffsetType = size_t;
-
-    private:
-        struct FreeBlockInfo;  // as its name
-
-        // Type of the map that keeps memory blocks sorted by their offsets
-        using TFreeBlocksByOffsetMap = std::map<OffsetType, FreeBlockInfo>;
- 
-        // Type of the map that keeps memory blocks sorted by their sizes
-        using TFreeBlocksBySizeMap = std::multimap<OffsetType, TFreeBlocksByOffsetMap::iterator>;        
-
-        struct FreeBlockInfo {
-            // Block size (no reserved space for the size of allocation)
-            // actually Size == OrderBySizeIt->first
-            OffsetType Size;
-            // Iterator referencing this block in the multimap sorted by the block size
-            TFreeBlocksBySizeMap::iterator OrderBySizeIt; 
-
-            FreeBlockInfo(OffsetType _Size) : Size(_Size) {}
-        };
-    
-    public:
-        VarSizeAllocMngr(OffsetType capacity);
-
+        VarSizeAllocMngr(size_t capacity);
         VarSizeAllocMngr(VarSizeAllocMngr&&) noexcept;
 
         VarSizeAllocMngr& operator=(VarSizeAllocMngr&&) noexcept;
@@ -60,67 +36,62 @@ namespace Chen::CDX12 {
         VarSizeAllocMngr(const VarSizeAllocMngr&) = delete;
         VarSizeAllocMngr& operator=(const VarSizeAllocMngr&) = delete;
 
-        void AddNewBlock(OffsetType Offset, OffsetType Size);
+        // Offset returned by Allocate() may not be aligned, but the size of the allocation
+        // is sufficient to properly align it
+        struct Allocation {
+            static constexpr size_t InvalidOffset = static_cast<size_t>(-1);
 
-        OffsetType Allocate(OffsetType Size);
+            static constexpr Allocation Invalid() noexcept { return {}; }
 
-        void Free(OffsetType Offset, OffsetType Size);
+            constexpr bool IsValid() const noexcept { return unalignedOffset != Invalid().unalignedOffset; }
+            constexpr void Reset() noexcept { *this = Invalid(); }
 
-        OffsetType GetFreeSize() const { return freeSize; }
-        OffsetType GetCapacity() const { return capacity; }
-
-        // InvalidOffset For Allocate
-        static OffsetType InvalidOffset;
-    private:
-        TFreeBlocksByOffsetMap m_FreeBlocksByOffset;
-        TFreeBlocksBySizeMap m_FreeBlocksBySize;
-
-        OffsetType capacity = 0;
-        OffsetType freeSize = 0;
-    };
-
-
-    // Variable Size GPU Allocations Manager
-    class VarSizeGPUAllocMngr : public VarSizeAllocMngr {
-    private:
-        struct FreedAllocationInfo {
-            OffsetType Offset;
-            OffsetType Size;
-            uint64_t FrameNumber;
+            size_t unalignedOffset{ InvalidOffset };
+            size_t size{ 0 };
         };
 
-    public:
-        VarSizeGPUAllocMngr(OffsetType capacity);
+        Allocation Allocate(size_t size, size_t alignment);
 
-        ~VarSizeGPUAllocMngr() = default;
-        
-        VarSizeGPUAllocMngr(VarSizeGPUAllocMngr&& rhs);
-
-        VarSizeGPUAllocMngr& operator=(VarSizeGPUAllocMngr&& rhs) = default;
-        VarSizeGPUAllocMngr(const VarSizeGPUAllocMngr&) = delete;
-        VarSizeGPUAllocMngr& operator=(const VarSizeGPUAllocMngr&) = delete;
-
-        void Free(OffsetType Offset, OffsetType Size, uint64_t FrameNumber)
-        {
-            // Do not release the block immediately, but add
-            // it to the queue instead
-            m_StaleAllocations.emplace_back(Offset, Size, FrameNumber);
+        void Free(Allocation&& allocation) {
+            Free(allocation.unalignedOffset, allocation.size);
+            allocation.Reset();
         }
- 
-        void ReleaseCompletedFrames(uint64_t NumCompletedFrames)
-        {
-            // Free all allocations from the beginning of the queue that belong to completed frames
-            while(!m_StaleAllocations.empty() && m_StaleAllocations.front().FrameNumber < NumCompletedFrames)
-            {
-                auto &OldestAllocation = m_StaleAllocations.front();
-                VarSizeAllocMngr::Free(OldestAllocation.Offset, OldestAllocation.Size);
-                m_StaleAllocations.pop_front();
-            }
-        }
+        void Free(size_t offset, size_t size);
 
-        static OffsetType InvalidOffset;
+        bool IsFull() const noexcept { return freeSize == 0; };
+        bool IsEmpty() const noexcept { return freeSize == capacity; };
+        size_t GetCapacity() const noexcept { return capacity; }
+        size_t GetFreeSize() const noexcept { return freeSize; }
+        size_t GetUsedSize() const noexcept { return capacity - freeSize; }
+
     private:
-        // record the Allocation Blocks that will be freed
-        std::deque<FreedAllocationInfo> m_StaleAllocations;
+        void AddNewBlock(size_t Offset, size_t Size);
+
+        void ResetCurrAlignment() noexcept;
+
+        struct FreeBlockInfo;
+
+        // Type of the map that keeps memory blocks sorted by their offsets
+        using TFreeBlocksByOffsetMap = std::map<size_t, FreeBlockInfo>;
+
+        // Type of the map that keeps memory blocks sorted by their sizes
+        using TFreeBlocksBySizeMap = std::multimap<size_t, TFreeBlocksByOffsetMap::iterator>;
+
+        struct FreeBlockInfo {
+            // Block size (no reserved space for the size of the allocation)
+            size_t size;
+
+            // Iterator referencing this block in the multimap sorted by the block size
+            TFreeBlocksBySizeMap::iterator OrderBySizeIt;
+
+            FreeBlockInfo(size_t size) : size(size) {}
+        };
+
+        TFreeBlocksByOffsetMap offset2freeblock;
+        TFreeBlocksBySizeMap   size2freeblock;
+
+        size_t capacity = 0;
+        size_t freeSize = 0;
+        size_t curMinAlignment = 0; // min alignment of all free blocks
     };
 }
