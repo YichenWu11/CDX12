@@ -26,6 +26,8 @@
 #include <fstream>
 #include <unordered_map>
 
+#include "dxcapi.h"
+
 using namespace Microsoft::WRL;
 
 namespace Chen::CDX12 {

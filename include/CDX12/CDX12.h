@@ -1,0 +1,20 @@
+#pragma once
+
+#include "_deps/d3dx12.h"
+#include "_deps/tinyobjloader/tinyobjloader.h"
+
+#include "Blob.h"
+#include "CmdQueue.h"
+#include "GeneralDesc.h"
+#include "DescriptorHeapMngr.h"
+#include "Device.h"
+#include "FrameResource.h"
+#include "FrameResourceMngr.h"
+#include "GCmdList.h"
+#include "DXUtil.h"
+#include "Metalib.h"
+#include "D3DInclude.h"
+#include "Resource/ResourceDeleteBatch.h"
+#include "Resource/MeshGPUBuffer.h"
+#include "Resource/UploadBuffer.h"
+#include "RenderResourceMngr.h"

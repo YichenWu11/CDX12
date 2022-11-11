@@ -1,0 +1,111 @@
+#pragma once
+
+#include "ResourceNode.hpp"
+#include "PassNode.hpp"
+#include "MoveNode.hpp"
+
+#include "../../../../UGraphviz/include/UGraphviz.hpp"
+
+#include <map>
+#include <unordered_map>
+#include <span>
+
+namespace Ubpa::UFG {
+	// 1. Add all resource nodes first, then add pass nodes
+	// 2. write means (read + write)
+	// 3. resource lifecycle: move in -> write -> reads & copy out -> copy in -> move out
+	class FrameGraph {
+	public:
+		FrameGraph(std::string name) : name{ std::move(name) } {}
+
+		const std::string& Name() const noexcept { return name; }
+
+		std::span<const ResourceNode> GetResourceNodes() const noexcept { return resourceNodes; }
+		std::span<const PassNode> GetPassNodes() const noexcept { return passNodes; }
+		std::span<const MoveNode> GetMoveNodes() const noexcept { return moveNodes; }
+
+		bool IsRegisteredResourceNode(std::string_view name) const;
+		bool IsRegisteredPassNode(std::string_view name) const;
+		bool IsRegisteredMoveNode(size_t dst, size_t src) const;
+		bool IsMovedOut(size_t src) const;
+		bool IsMovedIn(size_t dst) const;
+
+		size_t GetResourceNodeIndex(std::string_view name) const;
+		size_t GetPassNodeIndex(std::string_view name) const;
+		size_t GetMoveNodeIndex(size_t dst, size_t src) const;
+		size_t GetMoveSourceNodeIndex(size_t dst) const;
+		size_t GetMoveDestinationNodeIndex(size_t src) const;
+
+		size_t RegisterResourceNode(ResourceNode node);
+		size_t RegisterResourceNode(std::string node);
+		size_t RegisterPassNode(PassNode node);
+
+		size_t RegisterPassNode(
+			PassNode::Type type,
+			std::string name,
+			std::vector<size_t> inputs,
+			std::vector<size_t> outputs);
+
+		size_t RegisterGeneralPassNode(
+			std::string name,
+			std::vector<size_t> inputs,
+			std::vector<size_t> outputs);
+
+		size_t RegisterCopyPassNode(
+			std::string name,
+			std::vector<size_t> inputs,
+			std::vector<size_t> outputs);
+
+		/** The name is "Copy#<ID>". */
+		size_t RegisterCopyPassNode(
+			std::vector<size_t> inputs,
+			std::vector<size_t> outputs);
+
+		template<size_t N, size_t M>
+		size_t RegisterPassNode(
+			PassNode::Type type,
+			std::string name,
+			const std::array<std::string_view, N>& inputs_str,
+			const std::array<std::string_view, M>& outputs_str);
+
+		template<size_t N, size_t M>
+		size_t RegisterGeneralPassNode(
+			std::string name,
+			const std::array<std::string_view, N>& inputs_str,
+			const std::array<std::string_view, M>& outputs_str);
+
+		template<size_t N>
+		size_t RegisterCopyPassNode(
+			std::string name,
+			const std::array<std::string_view, N>& inputs_str,
+			const std::array<std::string_view, N>& outputs_str);
+
+		/** The name is "Copy#<ID>". */
+		template<size_t N>
+		size_t RegisterCopyPassNode(
+			const std::array<std::string_view, N>& inputs_str,
+			const std::array<std::string_view, N>& outputs_str);
+
+		size_t RegisterMoveNode(MoveNode node);
+		size_t RegisterMoveNode(size_t dst, size_t src);
+
+		void Clear() noexcept;
+
+		UGraphviz::Graph ToGraphvizGraph() const;
+		UGraphviz::Graph ToGraphvizGraph2() const;
+	private:
+		/** The name is "Copy#<ID>". */
+		std::string GenerateCopyPassNodeName() const;
+
+		std::string name;
+		std::vector<ResourceNode> resourceNodes;
+		std::vector<PassNode> passNodes;
+		std::vector<MoveNode> moveNodes;
+		std::map<std::string, size_t, std::less<>> name2rsrcNodeIdx;
+		std::map<std::string, size_t, std::less<>> name2passNodeIdx;
+		std::unordered_map<size_t, size_t> srcRsrcNodeIdx2moveNodeIdx;
+		std::unordered_map<size_t, size_t> dstRsrcNodeIdx2moveNodeIdx;
+	};
+}
+
+#include "detail/FrameGraph.inl"

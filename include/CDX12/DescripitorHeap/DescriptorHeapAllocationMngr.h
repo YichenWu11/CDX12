@@ -104,7 +104,6 @@ namespace Chen::CDX12 {
                                 uint32_t               FirstDescriptor,
                                 uint32_t               NumDescriptors);
 
-        // = default causes compiler error when instantiating std::vector::emplace_back() in Visual Studio 2015 (Version 14.0.23107.0 D14REL)
         DescriptorHeapAllocationMngr(DescriptorHeapAllocationMngr&& rhs) noexcept;
 
         // No copies or move-assignments

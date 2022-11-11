@@ -8,6 +8,8 @@ set(CMAKE_EXPORT_COMPILECOMMANDS ON)
 add_definitions("-DUNICODE" "-D_UNICODE")
 
 add_library(${PROJECT_NAME} 
+    src/core/D3DInclude.cpp
+    src/core/Blob.cpp
     src/core/VarSizeAllocMngr.cpp
     src/core/DXUtil.cpp
     src/core/Device.cpp
@@ -29,6 +31,9 @@ add_library(${PROJECT_NAME}
     src/core/Geometry/MeshMngr.cpp
 
     src/core/Resource/Buffer.cpp
+    src/core/Resource/ResourceDeleteBatch.cpp
+    src/core/Resource/MeshGPUBuffer.cpp
+    src/core/Resource/UploadBuffer.cpp
     
     src/core/Shader/GlobalSamplers.cpp
     src/core/Shader/Shader.cpp
@@ -52,9 +57,16 @@ add_library(${PROJECT_NAME}
     src/core/Math/MathHelper.cpp
 
     src/core/_deps/tinyobjloader/tinyobjloader.cpp
+    src/core/_deps/UFG/Compiler.cpp
+    src/core/_deps/UFG/FrameGraph.cpp
+
+    src/core/FrameGraph/Executor.cpp
+    src/core/FrameGraph/RsrcMngr.cpp
 )
 
 add_subdirectory(${CDX12_SOURCE_DIR}/DirectXTK12 ${CDX12_BINARY_DIR}/bin/CMake/DirectXTK12)
+add_subdirectory(UGraphviz)
+add_subdirectory(CTP)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/DirectXTK12 ${CMAKE_BINARY_DIR}/bin/CMake/DirectXTK12)
 
 add_library(Chen::CDX12 ALIAS ${PROJECT_NAME})
@@ -68,4 +80,6 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC dxgi.lib
     PUBLIC d3dcompiler.lib
     PUBLIC DirectXTK12
+    PUBLIC Ubpa::UGraphviz
+    PUBLIC Chen::CTP
 ) 
